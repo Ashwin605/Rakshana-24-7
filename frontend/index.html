@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description"
+    content="Rakshana 24/7 — Proactive digital safety and cyber-hygiene platform for women. AI-powered threat detection, legal reference, and anonymous reporting.">
+  <meta name="theme-color" content="#F472B6">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+  <title>Rakshana 24/7 — Home</title>
+
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon"
+    href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🛡️</text></svg>">
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Noto+Sans+Telugu:wght@400;600;700&display=swap"
+    rel="stylesheet">
+
+  <link rel="stylesheet" href="styles.css?v=10">
+</head>
+
+<body>
+
+  <!-- Particle Canvas Background -->
+  <canvas id="particleCanvas"></canvas>
+
+  <!-- Scroll Progress Bar -->
+  <div class="scroll-progress" id="scrollProgress"></div>
+
+  <!-- Page Loader -->
+  <div class="page-loader" id="pageLoader">
+    <div class="loader-content">
+      <div class="loader-shield">
+        <svg viewBox="0 0 60 60" fill="none">
+          <path d="M30 5L50 14V28C50 40.6 41.2 52 30 55C18.8 52 10 40.6 10 28V14L30 5Z" fill="url(#lg)" opacity="0.9" />
+          <path d="M24 30L28 34L37 25" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+          <defs>
+            <linearGradient id="lg" x1="10" y1="5" x2="50" y2="55">
+              <stop stop-color="#F472B6" />
+              <stop offset="1" stop-color="#E11D48" />
+            </linearGradient>
+          </defs>
+        </svg>
+      </div>
+      <p class="loader-text">Initializing Shield…</p>
+    </div>
+  </div>
+
+  <!-- ========== NAVIGATION ========== -->
+  <nav class="navbar" id="navbar">
+    <div class="container">
+      <a href="index.html" class="nav-brand" id="navBrand">
+        <span class="brand-icon">
+          <svg viewBox="0 0 40 40" fill="none">
+            <path d="M20 3L35 10V20C35 29.4 28.4 38 20 40C11.6 38 5 29.4 5 20V10L20 3Z" fill="url(#shield-grad)"
+              stroke="none" />
+            <path d="M16 20L19 23L25 17" stroke="white" stroke-width="2.5" stroke-linecap="round"
+              stroke-linejoin="round" />
+            <defs>
+              <linearGradient id="shield-grad" x1="5" y1="3" x2="35" y2="40">
+                <stop stop-color="#F472B6" />
+                <stop offset="1" stop-color="#E11D48" />
+              </linearGradient>
+            </defs>
+          </svg>
+        </span>
+        <span>Rakshana 24/7 <span class="brand-telugu">రక్షణ</span></span>
+      </a>
+
+      
+      <div class="nav-links" id="navLinks">
+        <a href="index.html">Home</a>
+        <a href="how-it-works.html">How It Works</a>
+        <a href="legal.html">Legal Rights</a>
+        <a href="scan.html">Scan</a>
+        <a href="report.html">Report</a>
+      </div>
+
+      <div class="nav-cta" id="navCta">
+        <div class="nav-notif-wrapper" id="navNotifWrapper" style="position:relative;">
+          <button class="btn-icon-notif" id="btnNavNotif" onclick="toggleMiniNotif(event)">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+              <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+            </svg>
+            <span class="badge-dot pulse-dot" id="miniBadgeAlert"></span>
+          </button>
+          
+          <div class="mini-notif-window glass-card" id="miniNotifWindow">
+            <div class="mini-notif-header">
+              <h4>Threat Center Live</h4>
+              <a href="dashboard.html">View Dashboard</a>
+            </div>
+            <div class="mini-notif-body" id="miniNotifList">
+               <div class="empty-state" style="padding: 20px;"><p>Checking for threats...</p></div>
+            </div>
+          </div>
+        </div>
+
+        <button class="btn btn-ghost" id="btnSignIn" onclick="window.location.href='auth.html'">Sign In</button>
+        <button class="btn btn-primary" id="btnGetProtected" onclick="window.location.href='dashboard.html'">My Dashboard</button>
+      </div>
+
+      <button class="mobile-menu-toggle" id="mobileMenuToggle" aria-label="Toggle navigation menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- ========== WARNING ALERT BANNER ========== -->
+  <div class="warning-banner" id="warningBanner" style="display:none">
+    <div class="container warning-banner-inner">
+      <div class="warning-icon">⚠️</div>
+      <div class="warning-content">
+        <strong id="warningTitle">Threat Detected</strong>
+        <p id="warningMessage">A potential threat has been identified. Review below for details.</p>
+      </div>
+      <button class="btn btn-sm btn-outline warning-dismiss" onclick="dismissWarning()">Dismiss</button>
+    </div>
+  </div>
+
+  <!-- ========== PUSH NOTIFICATION PROMPT ========== -->
+  <div class="notification-prompt glass-card" id="notifPrompt" style="display:none">
+    <div class="notif-prompt-icon">🔔</div>
+    <div class="notif-prompt-content">
+      <strong>Enable Push Notifications</strong>
+      <p>Get instant alerts when threats are detected — even when this tab is closed.</p>
+    </div>
+    <button class="btn btn-sm btn-accent" onclick="enableNotifications()">Enable</button>
+    <button class="btn btn-sm btn-ghost" onclick="dismissNotifPrompt()">Later</button>
+  </div>
+
+  <!-- ========== HERO SECTION ========== -->
+  <section class="hero" id="hero">
+    <div class="container">
+      <div class="hero-content">
+        <div class="hero-badge">
+          <svg viewBox="0 0 16 16" fill="none">
+            <path d="M8 1L14 4V8C14 12 11.2 15.4 8 16C4.8 15.4 2 12 2 8V4L8 1Z" fill="currentColor" />
+          </svg>
+          AI-Powered Digital Safety
+        </div>
+
+        <h1 class="hero-title">
+          She shouldn't have to
+          <span class="highlight gradient-text">wait</span> for the harm to find help.
+        </h1>
+
+        <p class="hero-description">
+          Rakshana 24/7 monitors the internet for threats targeting you and alerts you <strong>before</strong> the
+          harassment reaches your inbox, your phone, or your door.
+        </p>
+
+        <div class="hero-actions">
+          <button class="btn btn-accent btn-lg glow-btn" onclick="handleGetProtected(event)">
+            <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M10 2L17 6V10C17 15 13.8 19 10 20C6.2 19 3 15 3 10V6L10 2Z" />
+            </svg>
+            Start Protection
+          </button>
+          <a href="#how-it-works" class="btn btn-outline btn-lg">
+            See How It Works
+          </a>
+        </div>
+
+        <div class="hero-stats">
+          <div class="hero-stat"><span class="hero-stat-num" data-target="70" data-suffix="%+">0</span><span
+              class="hero-stat-label">threats from known contacts</span></div>
+          <div class="hero-stat"><span class="hero-stat-num" data-target="5" data-prefix="<"
+              data-suffix="%">0</span><span class="hero-stat-label">crimes reported</span></div>
+          <div class="hero-stat"><span class="hero-stat-num" data-target="0" data-exact="0">0</span><span
+              class="hero-stat-label">proactive tools exist</span></div>
+        </div>
+      </div>
+
+      <div class="hero-visual">
+        <div class="shield-3d">
+          <div class="shield-ring ring-1"></div>
+          <div class="shield-ring ring-2"></div>
+          <div class="shield-ring ring-3"></div>
+          <div class="shield-core">
+            <svg viewBox="0 0 80 80" fill="none">
+              <path d="M40 8L65 18V36C65 52 54 66 40 70C26 66 15 52 15 36V18L40 8Z" fill="url(#hg)" opacity="0.95" />
+              <path d="M32 40L37 45L49 33" stroke="white" stroke-width="3.5" stroke-linecap="round"
+                stroke-linejoin="round" />
+              <defs>
+                <linearGradient id="hg" x1="15" y1="8" x2="65" y2="70">
+                  <stop stop-color="#F472B6" />
+                  <stop offset="1" stop-color="#E11D48" />
+                </linearGradient>
+              </defs>
+            </svg>
+          </div>
+        </div>
+        <div class="floating-badge badge-top glass-card">
+          <span class="dot dot-green pulse-dot"></span>Shield Active
+        </div>
+        <div class="floating-badge badge-bottom glass-card">
+          <span class="dot dot-cyan pulse-dot"></span>Scanning…
+        </div>
+        <div class="floating-badge badge-left glass-card">
+          <span class="dot dot-amber"></span>NLP Ready
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== THE REALITY / PROBLEM ========== -->
+  <section class="reality-section" id="problem">
+    <div class="container">
+      <div class="section-header reveal">
+        <p class="section-label">THE REALITY</p>
+        <h2 class="section-title">This isn't a technology problem.<br>It's a <span class="gradient-text">silence</span>
+          problem.</h2>
+        <p class="section-subtitle">
+          Every day, women across India absorb digital harassment and move on — because the path from "something
+          happened" to "I got help" is impossibly wide.
+        </p>
+      </div>
+
+      <div class="gaps-grid">
+        <div class="gap-card glass-card reveal">
+          <div class="gap-icon">🔍</div>
+          <h3>Detection Gap</h3>
+          <p>Stalkerware, deepfakes, doxxing — by the time a woman realises she's being targeted, the damage is already
+            spreading. No early warning system exists.</p>
+        </div>
+        <div class="gap-card glass-card reveal">
+          <div class="gap-icon">📱</div>
+          <h3>Accessibility Gap</h3>
+          <p>Cyber Crime Portal is not mobile-first, not vernacular, not intuitive. A woman in rural Karnataka on a
+            budget phone with 3G — that portal is invisible to her.</p>
+        </div>
+        <div class="gap-card glass-card reveal">
+          <div class="gap-icon">⏳</div>
+          <h3>Response Gap</h3>
+          <p>Even after reporting: no case tracking, no acknowledgement, no counselling. The system treats it as data
+            entry, not a human problem.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== SOLUTION / FEATURES ========== -->
+  <section class="solution-section" id="resources">
+    <div class="container">
+      <div class="section-header reveal">
+        <p class="section-label">OUR ANSWER</p>
+        <h2 class="section-title">Don't wait for the storm.<br><span class="gradient-text">Watch the clouds.</span></h2>
+      </div>
+
+      <div class="features-grid">
+        <div class="feature-card glass-card reveal">
+          <div class="feature-icon-wrap"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="11" cy="11" r="8" />
+              <path d="M21 21l-4.3-4.3" />
+            </svg></div>
+          <h3>Surface Monitoring</h3>
+          <p>Scans Telegram channels, paste sites, and public forums for your phone number, name, or photos in
+            suspicious contexts.</p>
+        </div>
+        <div class="feature-card glass-card reveal">
+          <div class="feature-icon-wrap"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M12 2L2 7l10 5 10-5-10-5z" />
+              <path d="M2 17l10 5 10-5" />
+              <path d="M2 12l10 5 10-5" />
+            </svg></div>
+          <h3>NLP Threat Intelligence</h3>
+          <p>Context-aware scoring engine. Differentiates casual mention from doxxing thread. Graduated 0-100, never
+            binary.</p>
+        </div>
+        <div class="feature-card glass-card reveal">
+          <div class="feature-icon-wrap"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+              <polyline points="22 4 12 14.01 9 11.01" />
+            </svg></div>
+          <h3>Instant Alert + Action</h3>
+          <p>Every alert includes: what to screenshot, which laws apply, how to file anonymously, and emergency contacts
+            — in your language.</p>
+        </div>
+        <div class="feature-card glass-card reveal">
+          <div class="feature-icon-wrap"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+            </svg></div>
+          <h3>AES-256 Encryption</h3>
+          <p>All personal data encrypted at rest. Phone numbers hashed. Photos deleted post-analysis. You own your data
+            — export or delete anytime.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== FAQ SECTION — ADVANCED ACCORDION ========== -->
+  <section class="faq-section" id="faq" style="background: var(--bg-secondary); padding: var(--space-24) 0; position: relative;">
+    <div class="container">
+      <div class="section-header reveal">
+        <p class="section-label">FAQ</p>
+        <h2 class="section-title">Common Questions <span style="font-size: 12px; background: var(--primary); color: white; padding: 2px 8px; border-radius: 10px; vertical-align: middle;">v10.1 LIVE</span></h2>
+        <p class="section-subtitle">Find answers to the most common questions about our proactive safety shield.</p>
+      </div>
+
+      <div class="faq-accordion-advanced reveal" style="max-width: 800px; margin: 0 auto; display: flex; flex-direction: column; gap: var(--space-4);">
+        
+        <details class="faq-details glass-card" style="overflow: hidden;">
+          <summary class="faq-summary">
+            <h3>Is my data really anonymous?</h3>
+            <span class="faq-chevron">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+            </span>
+          </summary>
+          <div class="faq-content">
+            <p>Yes. All personal information like phone numbers and facial data is one-way hashed and encrypted using AES-256 before analysis. We do not store raw files. Your identity is shielded even from our own servers.</p>
+          </div>
+        </details>
+
+        <details class="faq-details glass-card" style="overflow: hidden;">
+          <summary class="faq-summary">
+            <h3>How does the NLP scanning work?</h3>
+            <span class="faq-chevron">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+            </span>
+          </summary>
+          <div class="faq-content">
+            <p>The threat scorer doesn't just look at keywords; it evaluates context. It distinguishes between a friendly mention and malicious doxxing, accurately mapping threats to laws like the IT Act and IPC. It understands sarcasm, slang, and indirect threats.</p>
+          </div>
+        </details>
+
+        <details class="faq-details glass-card" style="overflow: hidden;">
+          <summary class="faq-summary">
+            <h3>Does this replace police reports?</h3>
+            <span class="faq-chevron">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+            </span>
+          </summary>
+          <div class="faq-content">
+            <p>No. Rakshana acts as your early warning system and evidence collector. The 'Report' feature helps you securely and anonymously submit this evidence directly to the National Cyber Crime portal. We help you build a stronger case by collecting evidence before it is deleted.</p>
+          </div>
+        </details>
+
+      </div>
+    </div>
+  </section>
+<!-- ========== CTA SECTION ========== -->
+  <section class="cta-section" id="cta">
+    <div class="container">
+      <div class="cta-content">
+        <h2>She needs something that is already <span class="gradient-text">watching</span> when she is asleep.</h2>
+        <p class="cta-subtitle">Rakshana 24/7 is that something. Start your protection now — it takes 2 minutes.</p>
+        <button class="btn btn-accent btn-xl glow-btn" onclick="handleGetProtected(event)">Create Your Shield</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== FOOTER ========== -->
+  <footer class="footer" id="footer">
+    <div class="container">
+      <div class="footer-content">
+        <p class="footer-brand"><strong>Rakshana 24/7</strong> — <span class="telugu">రక్షణ 24/7</span> — Proactive
+          Digital Safety for Women</p>
+        <div class="footer-links">
+          <a href="legal.html">Legal Rights</a>
+          <span>·</span>
+          <a href="index.html#resources">Resources</a>
+          <span>·</span>
+          <a href="report.html">Report Anonymously</a>
+        </div>
+        <p class="footer-tagline">"Light that travels ahead of the harm."</p>
+        <div class="api-status" id="apiStatus">
+          <span class="dot dot-checking"></span>
+          <span>Checking API…</span>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Toast Container -->
+  <div id="toastContainer"></div>
+
+  <script src="api.js?v=10"></script>
+  <script src="app.js?v=10"></script>
+
+</body>
+
+</html>

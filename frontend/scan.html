@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description"
+    content="Rakshana 24/7 — Proactive digital safety and cyber-hygiene platform for women. AI-powered threat detection, legal reference, and anonymous reporting.">
+  <meta name="theme-color" content="#F472B6">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+  <title>Rakshana 24/7 — Threat Scanner</title>
+
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon"
+    href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🛡️</text></svg>">
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Noto+Sans+Telugu:wght@400;600;700&display=swap"
+    rel="stylesheet">
+
+  <link rel="stylesheet" href="styles.css?v=5">
+</head>
+
+<body>
+
+  <!-- Particle Canvas Background -->
+  <canvas id="particleCanvas"></canvas>
+
+  <!-- Scroll Progress Bar -->
+  <div class="scroll-progress" id="scrollProgress"></div>
+
+  <!-- Page Loader -->
+  <div class="page-loader" id="pageLoader">
+    <div class="loader-content">
+      <div class="loader-shield">
+        <svg viewBox="0 0 60 60" fill="none">
+          <path d="M30 5L50 14V28C50 40.6 41.2 52 30 55C18.8 52 10 40.6 10 28V14L30 5Z" fill="url(#lg)" opacity="0.9" />
+          <path d="M24 30L28 34L37 25" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+          <defs>
+            <linearGradient id="lg" x1="10" y1="5" x2="50" y2="55">
+              <stop stop-color="#F472B6" />
+              <stop offset="1" stop-color="#E11D48" />
+            </linearGradient>
+          </defs>
+        </svg>
+      </div>
+      <p class="loader-text">Initializing Shield…</p>
+    </div>
+  </div>
+
+  <!-- ========== NAVIGATION ========== -->
+  <nav class="navbar" id="navbar">
+    <div class="container">
+      <a href="index.html" class="nav-brand" id="navBrand">
+        <span class="brand-icon">
+          <svg viewBox="0 0 40 40" fill="none">
+            <path d="M20 3L35 10V20C35 29.4 28.4 38 20 40C11.6 38 5 29.4 5 20V10L20 3Z" fill="url(#shield-grad)"
+              stroke="none" />
+            <path d="M16 20L19 23L25 17" stroke="white" stroke-width="2.5" stroke-linecap="round"
+              stroke-linejoin="round" />
+            <defs>
+              <linearGradient id="shield-grad" x1="5" y1="3" x2="35" y2="40">
+                <stop stop-color="#F472B6" />
+                <stop offset="1" stop-color="#E11D48" />
+              </linearGradient>
+            </defs>
+          </svg>
+        </span>
+        <span>Rakshana 24/7 <span class="brand-telugu">రక్షణ</span></span>
+      </a>
+
+      
+      <div class="nav-links" id="navLinks">
+        <a href="index.html">Home</a>
+        <a href="how-it-works.html">How It Works</a>
+        <a href="legal.html">Legal Rights</a>
+        <a href="scan.html">Scan</a>
+        <a href="report.html">Report</a>
+      </div>
+
+      <div class="nav-cta" id="navCta">
+        <button class="btn btn-ghost" id="btnSignIn" onclick="window.location.href='auth.html'">Sign In</button>
+        <button class="btn btn-primary" id="btnGetProtected" onclick="window.location.href='dashboard.html'">My Dashboard</button>
+      </div>
+
+      <button class="mobile-menu-toggle" id="mobileMenuToggle" aria-label="Toggle navigation menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- ========== WARNING ALERT BANNER ========== -->
+  <div class="warning-banner" id="warningBanner" style="display:none">
+    <div class="container warning-banner-inner">
+      <div class="warning-icon">⚠️</div>
+      <div class="warning-content">
+        <strong id="warningTitle">Threat Detected</strong>
+        <p id="warningMessage">A potential threat has been identified. Review below for details.</p>
+      </div>
+      <button class="btn btn-sm btn-outline warning-dismiss" onclick="dismissWarning()">Dismiss</button>
+    </div>
+  </div>
+
+  <!-- ========== PUSH NOTIFICATION PROMPT ========== -->
+  <div class="notification-prompt glass-card" id="notifPrompt" style="display:none">
+    <div class="notif-prompt-icon">🔔</div>
+    <div class="notif-prompt-content">
+      <strong>Enable Push Notifications</strong>
+      <p>Get instant alerts when threats are detected — even when this tab is closed.</p>
+    </div>
+    <button class="btn btn-sm btn-accent" onclick="enableNotifications()">Enable</button>
+    <button class="btn btn-sm btn-ghost" onclick="dismissNotifPrompt()">Later</button>
+  </div>
+
+  <!-- ========== THREAT SCANNER — Upload & Analyze ========== -->
+  <section class="scanner-section" id="scanner" style="padding-top: var(--space-24)">
+    <div class="container">
+      <div class="section-header reveal">
+        <p class="section-label">ADVANCED THREAT SCANNER</p>
+        <h2 class="section-title">Deep <span class="gradient-text">Intelligence</span> Network</h2>
+        <p class="section-subtitle">Configure modules, input data, and let our proprietary AI engine trace, analyze, and score potential threats across the surface and deep web.</p>
+      </div>
+
+      <div class="scan-dashboard layout-advanced reveal">
+        <!-- Left Side: Config & Input -->
+        <div class="scan-left-panel">
+          <!-- Modules Config -->
+          <div class="glass-card scan-config-card" style="margin-bottom: var(--space-6);">
+            <div class="dash-card-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-4);">
+              <h4 style="margin:0; font-size: var(--font-lg); font-weight: 700;">Active Modules</h4>
+              <span class="badge has-alerts" style="background: var(--green); color: white;">4 Online</span>
+            </div>
+            <div class="scan-sources" style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+              <div class="scan-source active-source">
+                <span class="source-icon">📡</span>
+                <div class="source-info">
+                  <span class="source-name" style="font-weight:600; font-size:var(--font-sm);">Telegram</span>
+                  <span class="source-status available" style="font-size:var(--font-xs); color:var(--text-muted);">Connected</span>
+                </div>
+              </div>
+              <div class="scan-source active-source">
+                <span class="source-icon">🧠</span>
+                <div class="source-info">
+                  <span class="source-name" style="font-weight:600; font-size:var(--font-sm);">NLP Engine</span>
+                  <span class="source-status available" style="font-size:var(--font-xs); color:var(--text-muted);">Connected</span>
+                </div>
+              </div>
+              <div class="scan-source active-source">
+                <span class="source-icon">📋</span>
+                <div class="source-info">
+                  <span class="source-name" style="font-weight:600; font-size:var(--font-sm);">Paste Sites</span>
+                  <span class="source-status available" style="font-size:var(--font-xs); color:var(--text-muted);">Connected</span>
+                </div>
+              </div>
+              <div class="scan-source active-source" style="opacity: 0.7;">
+                <span class="source-icon">🔍</span>
+                <div class="source-info">
+                  <span class="source-name" style="font-weight:600; font-size:var(--font-sm);">Deep Image Trace</span>
+                  <span class="source-status upcoming" style="font-size:var(--font-xs); color:var(--amber);">Beta API</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Upload Zone -->
+          <div class="upload-zone glass-card" id="uploadZone">
+            <div class="upload-droparea" id="dropArea">
+              <div class="upload-icon">
+                <svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2.5">
+                  <path d="M32 42V18M32 18L22 28M32 18L42 28"/>
+                  <path d="M12 42V50A4 4 0 0016 54H48A4 4 0 0052 50V42"/>
+                </svg>
+              </div>
+              <h3>Drop files here</h3>
+              <p>or <label for="fileInput" class="upload-browse">browse</label></p>
+              <p class="upload-formats">Supports: .txt, .png, .jpg, .pdf</p>
+              <input type="file" id="fileInput" accept=".txt,.png,.jpg,.jpeg,.pdf,.csv,.html" style="display:none">
+            </div>
+            <div class="upload-file-info" id="fileInfo" style="display:none">
+              <span class="file-icon">📄</span>
+              <span class="file-name" id="fileName"></span>
+              <span class="file-size" id="fileSize"></span>
+              <button class="btn btn-sm btn-ghost" onclick="clearFile()">✕</button>
+            </div>
+
+            <div class="upload-divider"><span>or paste text directly</span></div>
+
+            <textarea id="scanTextInput" class="nlp-textarea" rows="4"
+              placeholder="Paste suspicious message, chat text, or any content you want analyzed..."></textarea>
+
+            <button class="btn btn-accent btn-lg glow-btn" style="width:100%" onclick="runThreatScan()" id="btnRunScan">
+              🚀 Execute Deep Scan
+            </button>
+          </div>
+        </div>
+
+        <!-- Right Side: Terminal / Results Panel -->
+        <div class="scan-right-panel glass-card" id="scanResultsPanel" style="display:flex; flex-direction:column; min-height:500px; padding: var(--space-6);">
+          
+          <div class="scan-terminal" id="scanTerminal" style="display:none;">
+            <div class="terminal-header">
+                <span class="dot dot-red"></span><span class="dot dot-amber"></span><span class="dot dot-green"></span>
+                <span class="terminal-title">RAKSHANA_CORE // LIVE_TRACE</span>
+            </div>
+            <div class="terminal-body" id="scanTerminalLogs"></div>
+          </div>
+
+          <div class="scan-placeholder" id="scanPlaceholder" style="flex:1;">
+            <div class="scan-placeholder-icon" style="font-size:3rem; margin-bottom:var(--space-4);">🛡️</div>
+            <h3 style="font-size:var(--font-lg); font-weight:700;">Engine Standby</h3>
+            <p style="color:var(--text-secondary); max-width:320px; margin:0 auto;">Input data on the left to initialize threat analysis trace. Results will output below.</p>
+          </div>
+
+          <div class="scan-results" id="scanResults" style="display:none; flex:1;">
+            <!-- Score Circle -->
+            <div class="scan-score-header">
+              <div class="scan-score-circle" id="scanScoreCircle">
+                <svg viewBox="0 0 120 120">
+                  <circle cx="60" cy="60" r="54" fill="none" stroke="rgba(244,114,182,0.15)" stroke-width="8"/>
+                  <circle cx="60" cy="60" r="54" fill="none" stroke-width="8" stroke-linecap="round"
+                    stroke-dasharray="339.3" stroke-dashoffset="339.3" id="scanScoreRing"
+                    style="transform-origin:center;transform:rotate(-90deg);transition:stroke-dashoffset 1s ease"/>
+                </svg>
+                <div class="scan-score-inner">
+                  <span class="scan-score-num" id="scanScoreNum">0</span>
+                  <span class="scan-score-label" id="scanScoreLabel">SAFE</span>
+                </div>
+              </div>
+              <div class="scan-score-meta">
+                <h3 id="scanThreatType">No Threat</h3>
+                <p id="scanConfidence">Confidence: 0%</p>
+                <p id="scanFileName" style="display:none"></p>
+              </div>
+            </div>
+
+            <!-- Explanation -->
+            <div class="scan-explanation" id="scanExplanation"></div>
+
+            <!-- Matched Keywords -->
+            <div class="scan-keywords" id="scanKeywords"></div>
+
+            <!-- Applicable Laws -->
+            <div class="scan-laws" id="scanLaws" style="display:none">
+              <h4>⚖️ Applicable Laws</h4>
+              <div class="scan-laws-list" id="scanLawsList"></div>
+            </div>
+
+            <!-- Recommended Actions -->
+            <div class="scan-actions" id="scanActions" style="display:none">
+              <h4>📋 Recommended Actions</h4>
+              <div class="scan-actions-list" id="scanActionsList"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== FOOTER ========== -->
+  <footer class="footer" id="footer">
+    <div class="container">
+      <div class="footer-content">
+        <p class="footer-brand"><strong>Rakshana 24/7</strong> — <span class="telugu">రక్షణ 24/7</span> — Proactive
+          Digital Safety for Women</p>
+        <div class="footer-links">
+          <a href="legal.html">Legal Rights</a>
+          <span>·</span>
+          <a href="index.html#resources">Resources</a>
+          <span>·</span>
+          <a href="report.html">Report Anonymously</a>
+        </div>
+        <p class="footer-tagline">"Light that travels ahead of the harm."</p>
+        <div class="api-status" id="apiStatus">
+          <span class="dot dot-checking"></span>
+          <span>Checking API…</span>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Toast Container -->
+  <div id="toastContainer"></div>
+
+  <script src="api.js?v=5"></script>
+  <script src="app.js?v=5"></script>
+
+</body>
+
+</html>

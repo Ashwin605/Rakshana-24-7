@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description"
+    content="Rakshana 24/7 — Proactive digital safety and cyber-hygiene platform for women. AI-powered threat detection, legal reference, and anonymous reporting.">
+  <meta name="theme-color" content="#F472B6">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+  <title>Rakshana 24/7 — My Dashboard</title>
+
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon"
+    href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🛡️</text></svg>">
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Noto+Sans+Telugu:wght@400;600;700&display=swap"
+    rel="stylesheet">
+
+  <link rel="stylesheet" href="styles.css?v=5">
+</head>
+
+<body>
+
+  <!-- Particle Canvas Background -->
+  <canvas id="particleCanvas"></canvas>
+
+  <!-- Scroll Progress Bar -->
+  <div class="scroll-progress" id="scrollProgress"></div>
+
+  <!-- Page Loader -->
+  <div class="page-loader" id="pageLoader">
+    <div class="loader-content">
+      <div class="loader-shield">
+        <svg viewBox="0 0 60 60" fill="none">
+          <path d="M30 5L50 14V28C50 40.6 41.2 52 30 55C18.8 52 10 40.6 10 28V14L30 5Z" fill="url(#lg)" opacity="0.9" />
+          <path d="M24 30L28 34L37 25" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+          <defs>
+            <linearGradient id="lg" x1="10" y1="5" x2="50" y2="55">
+              <stop stop-color="#F472B6" />
+              <stop offset="1" stop-color="#E11D48" />
+            </linearGradient>
+          </defs>
+        </svg>
+      </div>
+      <p class="loader-text">Initializing Shield…</p>
+    </div>
+  </div>
+
+  <!-- ========== NAVIGATION ========== -->
+  <nav class="navbar" id="navbar">
+    <div class="container">
+      <a href="index.html" class="nav-brand" id="navBrand">
+        <span class="brand-icon">
+          <svg viewBox="0 0 40 40" fill="none">
+            <path d="M20 3L35 10V20C35 29.4 28.4 38 20 40C11.6 38 5 29.4 5 20V10L20 3Z" fill="url(#shield-grad)"
+              stroke="none" />
+            <path d="M16 20L19 23L25 17" stroke="white" stroke-width="2.5" stroke-linecap="round"
+              stroke-linejoin="round" />
+            <defs>
+              <linearGradient id="shield-grad" x1="5" y1="3" x2="35" y2="40">
+                <stop stop-color="#F472B6" />
+                <stop offset="1" stop-color="#E11D48" />
+              </linearGradient>
+            </defs>
+          </svg>
+        </span>
+        <span>Rakshana 24/7 <span class="brand-telugu">రక్షణ</span></span>
+      </a>
+
+      
+      <div class="nav-links" id="navLinks">
+        <a href="index.html">Home</a>
+        <a href="how-it-works.html">How It Works</a>
+        <a href="legal.html">Legal Rights</a>
+        <a href="scan.html">Scan</a>
+        <a href="report.html">Report</a>
+      </div>
+
+      <div class="nav-cta" id="navCta">
+        <button class="btn btn-ghost" id="btnSignIn" onclick="window.location.href='auth.html'">Sign In</button>
+        <button class="btn btn-primary" id="btnGetProtected" onclick="window.location.href='dashboard.html'">My Dashboard</button>
+      </div>
+
+      <button class="mobile-menu-toggle" id="mobileMenuToggle" aria-label="Toggle navigation menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- ========== WARNING ALERT BANNER ========== -->
+  <div class="warning-banner" id="warningBanner" style="display:none">
+    <div class="container warning-banner-inner">
+      <div class="warning-icon">⚠️</div>
+      <div class="warning-content">
+        <strong id="warningTitle">Threat Detected</strong>
+        <p id="warningMessage">A potential threat has been identified. Review below for details.</p>
+      </div>
+      <button class="btn btn-sm btn-outline warning-dismiss" onclick="dismissWarning()">Dismiss</button>
+    </div>
+  </div>
+
+  <!-- ========== PUSH NOTIFICATION PROMPT ========== -->
+  <div class="notification-prompt glass-card" id="notifPrompt" style="display:none">
+    <div class="notif-prompt-icon">🔔</div>
+    <div class="notif-prompt-content">
+      <strong>Enable Push Notifications</strong>
+      <p>Get instant alerts when threats are detected — even when this tab is closed.</p>
+    </div>
+    <button class="btn btn-sm btn-accent" onclick="enableNotifications()">Enable</button>
+    <button class="btn btn-sm btn-ghost" onclick="dismissNotifPrompt()">Later</button>
+  </div>
+
+  <!-- ========== LIVE DASHBOARD DEMO ========== -->
+  <section class="dashboard-section" id="dashboard-preview" style="padding-top: var(--space-24)">
+    <div class="container">
+      <div class="section-header reveal">
+        <p class="section-label">LIVE DEMO</p>
+        <h2 class="section-title">Your protection status — <span class="gradient-text">live from the Internet</span>.
+        </h2>
+        <p class="section-subtitle">This dashboard pulls real data from our running backend. Sign in to see your own
+          data, or view the demo.</p>
+      </div>
+
+      <div class="dashboard-grid reveal">
+        <!-- Shield Status -->
+        <div class="dash-card glass-card shield-card">
+          <h4>Protection Status</h4>
+          <div class="shield-display">
+            <div class="shield-circle" id="dashShieldCircle">
+              <svg class="shield-ring-svg" viewBox="0 0 120 120">
+                <circle cx="60" cy="60" r="54" fill="none" stroke="rgba(244,114,182,0.15)" stroke-width="6" />
+                <circle cx="60" cy="60" r="54" fill="none" stroke="url(#shieldGrad)" stroke-width="6"
+                  stroke-linecap="round" stroke-dasharray="339.3" stroke-dashoffset="0" id="shieldProgress" />
+                <defs>
+                  <linearGradient id="shieldGrad">
+                    <stop stop-color="#16A34A" />
+                    <stop offset="1" stop-color="#F472B6" />
+                  </linearGradient>
+                </defs>
+              </svg>
+              <div class="shield-inner">
+                <span class="shield-score" id="dashScore">—</span>
+                <span class="shield-label" id="dashLabel">Loading…</span>
+              </div>
+            </div>
+          </div>
+          <p class="dash-meta" id="dashLastScan">Last scan: —</p>
+          <button class="btn btn-sm btn-outline" id="btnDemoLogin" onclick="demoLogin()">Load Live Data</button>
+        </div>
+
+        <!-- Recent Alerts -->
+        <div class="dash-card glass-card alerts-card">
+          <div class="dash-card-header">
+            <h4>Recent Alerts</h4>
+            <span class="badge" id="alertBadge">0</span>
+          </div>
+          <div class="alerts-list" id="dashAlertsList">
+            <div class="empty-state">
+              <p>Sign in to see your alerts</p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== NOTIFICATION CENTER ========== -->
+  <section class="notifications-section" id="notifications" style="display:none;">
+    <div class="container">
+      <div class="section-header reveal">
+        <p class="section-label">THREAT ALERTS INBOX</p>
+        <h2 class="section-title">Priority <span class="gradient-text">Notifications Center</span></h2>
+        <p class="section-subtitle">All detected threats are securely logged here. Filter by severity to prioritize your response.</p>
+      </div>
+      
+      <div class="notifications-container glass-card reveal">
+        <div class="notifications-header">
+          <div class="notification-tabs">
+            <button class="notif-tab active" data-filter="all">All Alerts <span id="badgeAll">0</span></button>
+            <button class="notif-tab critical" data-filter="critical">Critical <span id="badgeCritical">0</span></button>
+            <button class="notif-tab alert" data-filter="alert">High Alert <span id="badgeAlert">0</span></button>
+            <button class="notif-tab watch" data-filter="watch">Watch <span id="badgeWatch">0</span></button>
+            <button class="notif-tab safe" data-filter="safe">Safe <span id="badgeSafe">0</span></button>
+          </div>
+          <button class="btn btn-sm btn-outline" onclick="loadNotifications()">🔄 Refresh</button>
+        </div>
+        
+        <div class="notifications-list" id="notificationsList">
+          <div class="loading-state">
+            <div class="loader-spinner small"></div>
+            <p>Loading alerts securely…</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== FOOTER ========== -->
+  <footer class="footer" id="footer">
+    <div class="container">
+      <div class="footer-content">
+        <p class="footer-brand"><strong>Rakshana 24/7</strong> — <span class="telugu">రక్షణ 24/7</span> — Proactive
+          Digital Safety for Women</p>
+        <div class="footer-links">
+          <a href="legal.html">Legal Rights</a>
+          <span>·</span>
+          <a href="index.html#resources">Resources</a>
+          <span>·</span>
+          <a href="report.html">Report Anonymously</a>
+        </div>
+        <p class="footer-tagline">"Light that travels ahead of the harm."</p>
+        <div class="api-status" id="apiStatus">
+          <span class="dot dot-checking"></span>
+          <span>Checking API…</span>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Toast Container -->
+  <div id="toastContainer"></div>
+
+  <script src="api.js?v=5"></script>
+  <script src="app.js?v=5"></script>
+
+</body>
+
+</html>

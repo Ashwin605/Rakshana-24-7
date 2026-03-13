@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Rakshana 24/7 — Proactive digital safety and cyber-hygiene platform for women. AI-powered threat detection, legal reference, and anonymous reporting.">
+  <meta name="theme-color" content="#7B2BE0">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+  <title>Rakshana 24/7 — Proactive Digital Safety for Women</title>
+
+  <!-- PWA Manifest -->
+  <link rel="manifest" href="manifest.json">
+
+  <!-- Favicon (inline SVG shield) -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🛡️</text></svg>">
+
+  <!-- Stylesheet -->
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <!-- Scroll Progress Bar -->
+  <div class="scroll-progress" id="scrollProgress"></div>
+
+  <!-- Page Loader -->
+  <div class="page-loader" id="pageLoader">
+    <div class="loader-spinner"></div>
+  </div>
+
+  <!-- ========== NAVIGATION ========== -->
+  <nav class="navbar" id="navbar">
+    <div class="container">
+      <a href="#" class="nav-brand" id="navBrand">
+        <span class="brand-icon">
+          <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M20 3L35 10V20C35 29.4 28.4 38 20 40C11.6 38 5 29.4 5 20V10L20 3Z" fill="url(#shield-grad)" stroke="none"/>
+            <path d="M16 20L19 23L25 17" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+            <defs>
+              <linearGradient id="shield-grad" x1="5" y1="3" x2="35" y2="40" gradientUnits="userSpaceOnUse">
+                <stop stop-color="#7B2BE0"/>
+                <stop offset="1" stop-color="#FF6B9D"/>
+              </linearGradient>
+            </defs>
+          </svg>
+        </span>
+        <span>Rakshana 24/7 <span class="brand-telugu">రక్షణ</span></span>
+      </a>
+
+      <div class="nav-links" id="navLinks">
+        <a href="#problem" id="navProblem">The Problem</a>
+        <a href="#how-it-works" id="navHow">How It Works</a>
+        <a href="#legal" id="navLegal">Legal Rights</a>
+        <a href="#resources" id="navResources">Resources</a>
+        <a href="#report" id="navReport">Anonymous Report</a>
+      </div>
+
+      <div class="nav-cta" id="navCta">
+        <a href="#" class="btn btn-ghost" id="btnSignIn">Sign In</a>
+        <a href="#cta" class="btn btn-primary" id="btnGetProtected">Get Protected</a>
+      </div>
+
+      <button class="mobile-menu-toggle" id="mobileMenuToggle" aria-label="Toggle navigation menu">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- ========== HERO SECTION ========== -->
+  <section class="hero" id="hero">
+    <div class="container">
+      <div class="hero-content">
+        <div class="hero-badge">
+          <svg viewBox="0 0 16 16" fill="none"><path d="M8 1L14 4V8C14 12 11.2 15.4 8 16C4.8 15.4 2 12 2 8V4L8 1Z" fill="currentColor"/></svg>
+          Digital Safety for Women
+        </div>
+
+        <h1 class="hero-title">
+          She shouldn't have to
+          <span class="highlight">wait</span> for the harm to find help.
+        </h1>
+
+        <p class="hero-description">
+          Rakshana 24/7 monitors the internet for threats targeting you and alerts you before the harassment reaches your inbox, your phone, or your door.
+        </p>
+
+        <p class="hero-quote">"I am scared, so I am protected."</p>
+
+        <div class="hero-actions">
+          <a href="#cta" class="btn btn-accent btn-lg" id="btnStartProtection">
+            <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 2L17 6V10C17 15 13.8 19 10 20C6.2 19 3 15 3 10V6L10 2Z"/></svg>
+            Start Protection
+          </a>
+          <a href="#how-it-works" class="btn btn-outline btn-lg" id="btnSeeHow">
+            See How It Works
+          </a>
+        </div>
+      </div>
+
+      <div class="hero-image">
+        <img src="assets/hero-illustration.png" alt="Digital shield protecting woman illustration" width="520" height="400">
+        <div class="floating-badge badge-top">
+          <span class="dot dot-green"></span>
+          Shield Active
+        </div>
+        <div class="floating-badge badge-bottom">
+          <span class="dot dot-amber"></span>
+          Scanning…
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== STATS SECTION ========== -->
+  <section class="stats-section" id="stats">
+    <div class="container">
+      <div class="stats-grid">
+        <div class="stat-item reveal">
+          <div class="stat-number" data-target="70" data-suffix="%+">0</div>
+          <p class="stat-label">of cyber harassment comes from someone the victim knows</p>
+        </div>
+        <div class="stat-item reveal">
+          <div class="stat-number" data-target="600" data-suffix="M+">0</div>
+          <p class="stat-label">women in India are potential targets with limited digital literacy</p>
+        </div>
+        <div class="stat-item reveal">
+          <div class="stat-number" data-target="5" data-prefix="<" data-suffix="%">0</div>
+          <p class="stat-label">of cyber crimes against women are ever reported</p>
+        </div>
+        <div class="stat-item reveal">
+          <div class="stat-number" data-target="0" data-exact="0">0</div>
+          <p class="stat-label">existing tools that detect threats before they reach the victim</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== THE REALITY / PROBLEM SECTION ========== -->
+  <section class="reality-section" id="problem">
+    <div class="container">
+      <div class="reality-header reveal">
+        <p class="section-label">THE REALITY</p>
+        <h2 class="section-title">This isn't a technology problem. It's a silence problem.</h2>
+        <p class="section-subtitle">
+          Every day, women across India absorb digital harassment and move on — because the path from "something happened to me" to "I got help" is impossibly wide.
+        </p>
+      </div>
+
+      <div class="reality-content">
+        <div class="reality-story reveal">
+          <p>
+            A woman in a Tier 2 city receives a morphed image of herself on WhatsApp. She doesn't know if it's a crime. She doesn't know who to call. She googles "cyber crime complaint India" and lands on a portal that takes 20 minutes to fill, asks for an FIR number she doesn't have, and gives zero feedback after submission. She closes the tab. Nothing happens.
+          </p>
+          <p class="story-note">This happens thousands of times every day across India.</p>
+        </div>
+
+        <div class="reality-illustration reveal">
+          <div class="phone-mockup">
+            <div class="line"></div>
+            <div class="line"></div>
+            <div class="line"></div>
+            <div class="line"></div>
+            <div class="alert-icon">!</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="gaps-grid">
+        <div class="gap-card reveal">
+          <div class="gap-number">1</div>
+          <h3>Detection Gap</h3>
+          <p>Stalkerware, deepfakes, doxxing — by the time a woman realises she's being targeted, the damage is already spreading. There is no early warning system. Nobody is watching the signals before the explosion.</p>
+        </div>
+        <div class="gap-card reveal">
+          <div class="gap-number">2</div>
+          <h3>Accessibility Gap</h3>
+          <p>Cyber Crime Portal is not mobile-first, not truly vernacular, not intuitive. A woman in rural Karnataka who speaks only Kannada on a budget Android with 3G — that portal is effectively invisible to her.</p>
+        </div>
+        <div class="gap-card reveal">
+          <div class="gap-number">3</div>
+          <h3>Response Gap</h3>
+          <p>Even if she reports, she has no idea what happens next. No case tracking, no acknowledgement, no counselling redirect. The system treats it as a data entry problem, not a human problem.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== OUR ANSWER / SOLUTION SECTION ========== -->
+  <section class="solution-section" id="resources">
+    <div class="container">
+      <div class="solution-header reveal">
+        <p class="section-label">OUR ANSWER</p>
+        <h2 class="section-title">Don't wait for the storm. Watch the clouds.</h2>
+        <p class="section-subtitle">
+          Rakshana 24/7 doesn't wait for a woman to come to us after something happens. We monitor publicly available signals and alert her proactively — before the harassment reaches her.
+        </p>
+      </div>
+
+      <div class="solution-features">
+        <div class="feature-card reveal">
+          <div class="feature-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="11" cy="11" r="8"/><path d="M21 21l-4.3-4.3"/>
+            </svg>
+          </div>
+          <h3>Surface Monitoring</h3>
+          <p>We scan Telegram channels, paste sites, and public forums for your phone number, name, or photos appearing in suspicious contexts.</p>
+        </div>
+
+        <div class="feature-card reveal">
+          <div class="feature-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/>
+            </svg>
+          </div>
+          <h3>Threat Intelligence</h3>
+          <p>NLP-powered contextual scoring — not just keyword matching. We understand whether a mention is casual or dangerous. Score: 0-100, graduated, never binary.</p>
+        </div>
+
+        <div class="feature-card reveal">
+          <div class="feature-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>
+            </svg>
+          </div>
+          <h3>Instant Alert + Action</h3>
+          <p>Every alert comes with what to screenshot, which laws apply, how to file anonymously, and who to contact. The alert and the action are one atomic unit.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== PIPELINE / HOW IT WORKS ========== -->
+  <section class="pipeline-section" id="how-it-works">
+    <div class="container">
+      <div class="pipeline-header reveal">
+        <p class="section-label">THE PIPELINE</p>
+        <h2 class="section-title">From registration to protection in 5 steps.</h2>
+      </div>
+
+      <div class="pipeline-steps">
+        <div class="pipeline-step">
+          <div class="step-number">1</div>
+          <div class="step-content">
+            <h3>Register Your Digital Fingerprint</h3>
+            <p>Your phone number, a selfie, your social handles. We hash and encrypt everything — raw data is never stored. Your fingerprint is your shield.</p>
+          </div>
+        </div>
+
+        <div class="pipeline-step">
+          <div class="step-number">2</div>
+          <div class="step-content">
+            <h3>Continuous Background Monitoring</h3>
+            <p>Our scanner engine runs every 4 hours across Telegram public channels, paste sites, and forums — looking for your fingerprint in suspicious contexts.</p>
+          </div>
+        </div>
+
+        <div class="pipeline-step">
+          <div class="step-number">3</div>
+          <div class="step-content">
+            <h3>NLP Threat Scoring</h3>
+            <p>Every match is contextually analysed. "Priya's number is +91-XXXX" in a contact-sharing group vs the same number in a doxxing thread — our NLP engine knows the difference.</p>
+          </div>
+        </div>
+
+        <div class="pipeline-step">
+          <div class="step-number">4</div>
+          <div class="step-content">
+            <h3>Graduated Alert Delivery</h3>
+            <p>Score > 40: dashboard update. Score > 70: email alert with action guide. Score > 90: your trusted contacts are notified. Never binary, never panic-inducing.</p>
+          </div>
+        </div>
+
+        <div class="pipeline-step">
+          <div class="step-number">5</div>
+          <div class="step-content">
+            <h3>Action + Legal + Support</h3>
+            <p>Every alert tells you what law was broken, what to screenshot, how to file an anonymous complaint at cybercrime.gov.in, and connects you to helplines — all in your language.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== DASHBOARD PREVIEW ========== -->
+  <section class="dashboard-preview-section" id="dashboard-preview">
+    <div class="container" style="text-align: center;">
+      <p class="section-label reveal">LIVE DASHBOARD</p>
+      <h2 class="section-title reveal" style="max-width: 600px; margin: 0 auto var(--space-12);">Your protection status, at a glance.</h2>
+
+      <div class="dashboard-mockup reveal">
+        <div class="dashboard-header">
+          <h3>🛡️ Protection Status</h3>
+          <p>Dashboard — Rakshana 24/7</p>
+        </div>
+        <div class="dashboard-shield">
+          <div class="shield-circle">
+            <span class="shield-status">Safe</span>
+            <span class="shield-label">Protected</span>
+          </div>
+          <p class="dashboard-scan-info">Last scan: <strong>2 minutes ago</strong></p>
+        </div>
+        <div class="dashboard-alerts">
+          <h4>Recent Activity</h4>
+          <div class="alert-item">
+            <span class="alert-dot dot-green"></span>
+            <div class="alert-item-info">
+              <div class="alert-title">Telegram scan — Clear</div>
+              <div class="alert-time">2 mins ago</div>
+            </div>
+          </div>
+          <div class="alert-item">
+            <span class="alert-dot dot-green"></span>
+            <div class="alert-item-info">
+              <div class="alert-title">Forum scan — Clear</div>
+              <div class="alert-time">4 hrs ago</div>
+            </div>
+          </div>
+          <div class="alert-item">
+            <span class="alert-dot dot-amber"></span>
+            <div class="alert-item-info">
+              <div class="alert-title">Paste site mention — Low risk</div>
+              <div class="alert-time">1 day ago</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== LEGAL RIGHTS SECTION ========== -->
+  <section class="legal-section" id="legal">
+    <div class="legal-hero">
+      <div class="container">
+        <p class="section-label">LEGAL REFERENCE</p>
+        <h2 class="section-title">Know Your <span class="highlight-pink">Rights</span>.<br>Know the <span class="highlight-pink">Law</span>.</h2>
+        <p class="section-subtitle">
+          Every Indian woman has legal protection against cyber crimes. Here is every law, section, and helpline you need — in plain language.
+        </p>
+      </div>
+    </div>
+
+    <!-- Constitutional Rights -->
+    <div class="rights-section">
+      <div class="container">
+        <div class="rights-header reveal">
+          <p class="section-label">YOUR CONSTITUTIONAL RIGHTS</p>
+          <h2 class="section-title">Rights Every Woman Has Online</h2>
+          <p class="section-subtitle">These rights are guaranteed by the Constitution of India and enforced by law. No one can take them away.</p>
+        </div>
+
+        <div class="rights-grid">
+          <div class="right-card reveal">
+            <div class="right-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            </div>
+            <h3>Right to Privacy</h3>
+            <p>Article 21 of the Constitution. Your personal data, images, conversations, and location are protected. No one can share them without your consent.</p>
+          </div>
+
+          <div class="right-card reveal">
+            <div class="right-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+            </div>
+            <h3>Right to Dignity</h3>
+            <p>Article 21 protects your dignity. Online harassment, morphing, stalking, and defamation are violations of this fundamental right.</p>
+          </div>
+
+          <div class="right-card reveal">
+            <div class="right-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+            </div>
+            <h3>Right to File FIR</h3>
+            <p>Police MUST register your FIR. If they refuse, approach the Superintendent of Police or file through cybercrime.gov.in directly.</p>
+          </div>
+
+          <div class="right-card reveal">
+            <div class="right-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            </div>
+            <h3>Right to Zero FIR</h3>
+            <p>You can file an FIR at ANY police station in India — not just your local one. This is called a Zero FIR. The police must accept it.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Cyber Laws -->
+    <div class="laws-section">
+      <div class="container">
+        <div class="laws-header reveal">
+          <p class="section-label">INDIAN CYBER LAW</p>
+          <h2 class="section-title">Laws That Protect You</h2>
+          <p class="section-subtitle">These are the specific legal sections that apply to cyber crimes against women in India. Screenshot this page — it's your legal toolkit.</p>
+        </div>
+
+        <div class="law-search reveal" id="lawSearch">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.3-4.3"/></svg>
+          <input type="text" id="lawSearchInput" placeholder="Search laws (e.g. stalking, morphed photos, blackmail…)" aria-label="Search cyber laws">
+        </div>
+
+        <div class="laws-list" id="lawsList">
+          <!-- Law Card 1 -->
+          <div class="law-card reveal" data-keywords="stalking following monitoring spyware whatsapp instagram location tracking">
+            <span class="law-badge ipc">IPC / BNS</span>
+            <h3>Cyber Stalking</h3>
+            <p class="law-sections">Section 354D IPC — Stalking | Section 78 BNS (New Law)</p>
+            <p>If someone repeatedly contacts you, monitors your internet or phone usage, watches or follows you using electronic means, or tracks your movements — this is a criminal offence.</p>
+            <div class="law-punishment">Punishment: Up to 3 years imprisonment + fine (first offence). Up to 5 years for repeat offenders.</div>
+            <div class="law-tags">
+              <span class="law-tag">WhatsApp</span>
+              <span class="law-tag">Instagram</span>
+              <span class="law-tag">Location tracking</span>
+              <span class="law-tag">Spyware</span>
+            </div>
+          </div>
+
+          <!-- Law Card 2 -->
+          <div class="law-card reveal" data-keywords="morphed images deepfakes manipulated photos revenge porn ai generated privacy">
+            <span class="law-badge it-act">IT ACT</span>
+            <h3>Morphed / Manipulated Images & Deepfakes</h3>
+            <p class="law-sections">Section 66E IT Act — Privacy Violation | Section 67/67A — Obscene Content</p>
+            <p>Publishing or sharing someone's morphed, manipulated, or AI-generated (deepfake) intimate images is a serious criminal offence. This includes creating, distributing, or even possessing such content.</p>
+            <div class="law-punishment">Punishment: Section 66E: Up to 3 years + ₹2 lakh fine. Section 67A: Up to 7 years + ₹10 lakh fine.</div>
+            <div class="law-tags">
+              <span class="law-tag">Deepfakes</span>
+              <span class="law-tag">Morphed photos</span>
+              <span class="law-tag">Revenge porn</span>
+              <span class="law-tag">AI-generated</span>
+            </div>
+          </div>
+
+          <!-- Law Card 3 -->
+          <div class="law-card reveal" data-keywords="harassment abuse threatening messages online abuse social media trolling">
+            <span class="law-badge ipc">IPC / BNS</span>
+            <h3>Online Harassment & Abuse</h3>
+            <p class="law-sections">Section 354A IPC — Sexual Harassment | Section 509 IPC — Insult to Modesty</p>
+            <p>Sending unwanted sexual messages, lewd comments, threats, or abusive content online is punishable. This covers DMs, comments, emails, and any electronic communication.</p>
+            <div class="law-punishment">Punishment: Up to 3 years imprisonment + fine.</div>
+            <div class="law-tags">
+              <span class="law-tag">Social media</span>
+              <span class="law-tag">DMs</span>
+              <span class="law-tag">Comments</span>
+              <span class="law-tag">Emails</span>
+            </div>
+          </div>
+
+          <!-- Law Card 4 -->
+          <div class="law-card reveal" data-keywords="blackmail extortion sextortion threatening intimate images money demand">
+            <span class="law-badge bns">IPC / BNS</span>
+            <h3>Cyber Blackmail & Sextortion</h3>
+            <p class="law-sections">Section 384/385 IPC — Extortion | Section 506 IPC — Criminal Intimidation</p>
+            <p>Threatening to publish intimate images or private information unless demands (money, favours) are met is criminal extortion. The threat alone is punishable, even without execution.</p>
+            <div class="law-punishment">Punishment: Up to 7 years imprisonment + fine for extortion. Up to 2 years for criminal intimidation.</div>
+            <div class="law-tags">
+              <span class="law-tag">Sextortion</span>
+              <span class="law-tag">Blackmail</span>
+              <span class="law-tag">Threats</span>
+              <span class="law-tag">Intimate images</span>
+            </div>
+          </div>
+
+          <!-- Law Card 5 -->
+          <div class="law-card reveal" data-keywords="doxxing personal information sharing leaking address phone number">
+            <span class="law-badge it-act">IT ACT</span>
+            <h3>Doxxing — Leaking Personal Information</h3>
+            <p class="law-sections">Section 66C IT Act — Identity Theft | Section 72 IT Act — Breach of Confidentiality</p>
+            <p>Publishing someone's personal information (address, phone, photos, workplace) online without consent — especially to harass or endanger — is a criminal offence under multiple sections.</p>
+            <div class="law-punishment">Punishment: Up to 3 years imprisonment + ₹1 lakh fine.</div>
+            <div class="law-tags">
+              <span class="law-tag">Doxxing</span>
+              <span class="law-tag">Personal info</span>
+              <span class="law-tag">Identity theft</span>
+              <span class="law-tag">Phone numbers</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== ANONYMOUS REPORT SECTION ========== -->
+  <section class="report-section" id="report">
+    <div class="container">
+      <div class="report-grid">
+        <div class="reveal">
+          <p class="section-label">ANONYMOUS REPORTING</p>
+          <h2 class="section-title">Report Without Fear.</h2>
+          <p class="section-subtitle">
+            Your identity is encrypted. Your report is anonymous. No account required. No FIR number needed. We'll guide you through every step.
+          </p>
+          <div style="margin-top: var(--space-8);">
+            <div style="display: flex; align-items: center; gap: var(--space-3); margin-bottom: var(--space-4);">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#22C55E" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+              <span style="font-size: var(--font-size-sm); color: var(--color-text-secondary);">AES-256 encryption for all data</span>
+            </div>
+            <div style="display: flex; align-items: center; gap: var(--space-3); margin-bottom: var(--space-4);">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#22C55E" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+              <span style="font-size: var(--font-size-sm); color: var(--color-text-secondary);">No personal information stored</span>
+            </div>
+            <div style="display: flex; align-items: center; gap: var(--space-3); margin-bottom: var(--space-4);">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#22C55E" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+              <span style="font-size: var(--font-size-sm); color: var(--color-text-secondary);">Direct routing to cybercrime.gov.in</span>
+            </div>
+            <div style="display: flex; align-items: center; gap: var(--space-3);">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#22C55E" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+              <span style="font-size: var(--font-size-sm); color: var(--color-text-secondary);">Available in English & Telugu</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="report-form-card reveal">
+          <h3 style="font-size: var(--font-size-xl); font-weight: 700; margin-bottom: var(--space-6);">File Anonymous Report</h3>
+          <form id="reportForm" onsubmit="return false;">
+            <div class="form-group">
+              <label for="reportType">Type of Incident</label>
+              <select id="reportType">
+                <option value="">Select incident type…</option>
+                <option value="stalking">Cyber Stalking</option>
+                <option value="morphed">Morphed / Deepfake Images</option>
+                <option value="harassment">Online Harassment</option>
+                <option value="blackmail">Blackmail / Sextortion</option>
+                <option value="doxxing">Doxxing / Info Leak</option>
+                <option value="other">Other</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="reportPlatform">Platform (Optional)</label>
+              <input type="text" id="reportPlatform" placeholder="e.g., WhatsApp, Instagram, Telegram…">
+            </div>
+
+            <div class="form-group">
+              <label for="reportDescription">What Happened?</label>
+              <textarea id="reportDescription" placeholder="Describe the incident in your own words. Include dates, screenshots info, or any details you remember…" rows="4"></textarea>
+            </div>
+
+            <button type="submit" class="btn btn-accent btn-lg" style="width: 100%;" id="btnSubmitReport">
+              <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 2L17 6V10C17 15 13.8 19 10 20C6.2 19 3 15 3 10V6L10 2Z"/></svg>
+              Submit Anonymous Report
+            </button>
+
+            <div class="form-privacy-note">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+              <span>Your report is encrypted end-to-end. We do not collect IP addresses or device identifiers. Reports are forwarded anonymously to the National Cyber Crime Portal.</span>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== CTA SECTION ========== -->
+  <section class="cta-section" id="cta">
+    <div class="container">
+      <div class="cta-shield-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+      </div>
+      <h2>She needs something that is already watching when she is asleep.</h2>
+      <p class="cta-subtitle">Rakshana 24/7 is that something. Start your protection now — it takes 2 minutes.</p>
+      <a href="#" class="btn btn-accent btn-xl" id="btnCreateShield">Create Your Shield</a>
+    </div>
+  </section>
+
+  <!-- ========== FOOTER ========== -->
+  <footer class="footer" id="footer">
+    <div class="container">
+      <p class="footer-brand">
+        <strong>Rakshana 24/7</strong> — <span class="telugu">రక్షణ 24/7</span> — Proactive Digital Safety for Women
+      </p>
+      <div class="footer-links">
+        <a href="#legal">Legal Rights & Cyber Law</a>
+        <span style="color: var(--color-dark-text-secondary);">·</span>
+        <a href="#resources">Resources</a>
+        <span style="color: var(--color-dark-text-secondary);">·</span>
+        <a href="#report">Report Anonymously</a>
+      </div>
+      <p class="footer-tagline">"Light that travels ahead of the harm."</p>
+    </div>
+  </footer>
+
+  <!-- JavaScript -->
+  <script src="app.js"></script>
+</body>
+</html>
