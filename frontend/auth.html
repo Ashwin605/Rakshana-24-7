@@ -6,7 +6,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Rakshana 24/7 — Authentication</title>
   
-  <link rel="stylesheet" href="styles.css?v=6">
+  <link rel="stylesheet" href="styles.css?v=12">
+  <link rel="stylesheet" href="voice-assistant.css?v=1">
   
   <!-- Overriding modal styles for the full screen auth page -->
   <style>
@@ -103,6 +104,16 @@
     }
     .btn-advanced:active { transform: translateY(0); }
 
+    .btn-biometric {
+      width: 100%; padding: 14px; margin-top: var(--space-4);
+      background: rgba(255, 255, 255, 0.8); border: 1px dashed var(--primary);
+      color: var(--primary-dark); font-weight: 700; font-size: var(--font-sm);
+      border-radius: var(--radius-md); cursor: pointer; display: flex;
+      align-items: center; justify-content: center; gap: 8px; transition: all 0.3s;
+    }
+    .btn-biometric:hover { background: var(--primary); color: white; border-style: solid; }
+    .btn-biometric svg { width: 20px; height: 20px; }
+
     .back-home {
       position: absolute; top: 24px; left: 24px; display: flex; align-items: center; gap: 8px;
       color: var(--text-secondary); text-decoration: none; font-weight: 600; padding: 10px 16px;
@@ -110,6 +121,43 @@
       box-shadow: var(--shadow-sm); z-index: 20; transition: all 0.2s;
     }
     .back-home:hover { background: white; color: var(--text-primary); transform: translateY(-2px); }
+
+    /* Profile Upload UI */
+    .profile-upload-container {
+      display: flex; flex-direction: column; align-items: center; margin-bottom: var(--space-6);
+    }
+    .profile-preview {
+      width: 100px; height: 100px; border-radius: 50%; border: 3px solid var(--primary);
+      background: #f1f5f9; display: flex; align-items: center; justify-content: center;
+      margin-bottom: var(--space-3); position: relative; overflow: hidden;
+      cursor: pointer; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .profile-preview:hover { transform: scale(1.05); border-color: var(--accent); }
+    .profile-preview img { width: 100%; height: 100%; object-fit: cover; }
+    .profile-preview .upload-placeholder { font-size: 32px; color: var(--text-muted); transition: all 0.3s; }
+    .profile-preview:hover .upload-placeholder { color: var(--primary); }
+    .profile-upload-label { font-size: 13px; font-weight: 700; color: var(--primary); cursor: pointer; }
+    .hidden-input { display: none; }
+    
+    .upload-hint { font-size: 11px; color: var(--text-muted); margin-top: 4px; }
+
+    /* Camera UI */
+    .camera-container {
+      position: relative; width: 150px; height: 150px; border-radius: 50%;
+      border: 4px solid var(--primary); background: #000; overflow: hidden;
+      margin-bottom: var(--space-4); box-shadow: 0 10px 25px rgba(244, 114, 182, 0.3);
+    }
+    #cameraStream { width: 100%; height: 100%; object-fit: cover; transform: scaleX(-1); }
+    #capturedPhoto { width: 100%; height: 100%; object-fit: cover; display: none; transform: scaleX(-1); }
+    
+    .camera-controls { display: flex; gap: 10px; margin-bottom: var(--space-6); }
+    .btn-camera {
+      padding: 8px 16px; font-size: 12px; font-weight: 700; border-radius: var(--radius-full);
+      border: none; cursor: pointer; transition: all 0.2s; background: var(--bg-secondary);
+      color: var(--text-primary); border: 1px solid var(--border);
+    }
+    .btn-camera.capture { background: var(--primary); color: white; border: none; }
+    .btn-camera:hover { transform: translateY(-1px); box-shadow: var(--shadow-sm); }
   </style>
 </head>
 
@@ -154,16 +202,45 @@
           <label for="loginEmail">Email Address</label>
           <input type="email" id="loginEmail" class="advanced-input" placeholder="your@email.com" required>
         </div>
-        <div class="form-group">
+        <div class="form-group" style="margin-bottom: var(--space-8);">
           <label for="loginPassword">Password</label>
           <input type="password" id="loginPassword" class="advanced-input" placeholder="••••••••" required>
         </div>
         <button type="submit" class="btn-advanced" id="btnLoginSubmit">Sign In</button>
+        
+        <div style="display: flex; align-items: center; margin: 20px 0; gap: 10px;">
+          <div style="flex:1; height:1px; background:var(--border);"></div>
+          <span style="font-size:11px; color:var(--text-muted); font-weight:700; text-transform:uppercase;">or use biometric</span>
+          <div style="flex:1; height:1px; background:var(--border);"></div>
+        </div>
+
+        <button type="button" class="btn-biometric" id="btnBiometricLogin" onclick="handleBiometricLogin()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2zm0 18a8 8 0 1 1 8-8 8 8 0 0 1-8 8z"/>
+            <path d="M12 7a5 5 0 0 0-5 5h2a3 3 0 0 1 3-3V7z"/>
+            <path d="M12 17a5 5 0 0 1 5-5h-2a3 3 0 0 0-3 3v2z"/>
+          </svg>
+          Fingerprint Unlock
+        </button>
+
         <p style="text-align:center; font-size:12px; color:var(--text-muted); margin-top:20px;">Use demo@rakshana.in / rakshana123 to demo</p>
       </form>
 
       <!-- Register Form -->
       <form id="advRegisterForm" style="display:none" onsubmit="advHandleRegister(event)">
+        <div class="profile-upload-container">
+          <div class="camera-container">
+            <video id="cameraStream" autoplay playsinline muted></video>
+            <img id="capturedPhoto">
+          </div>
+          <div class="camera-controls">
+            <button type="button" class="btn-camera capture" id="btnCapture" onclick="takeSelfie()">📸 Take Selfie</button>
+            <button type="button" class="btn-camera" id="btnRetake" style="display:none" onclick="startCamera()">🔄 Retake</button>
+          </div>
+          <span class="upload-hint">Live selfie is mandatory for identity verification</span>
+          <canvas id="photoCanvas" style="display:none"></canvas>
+        </div>
+
         <div class="form-group">
           <label for="regName">Display Name</label>
           <input type="text" id="regName" class="advanced-input" placeholder="Your name" required>
@@ -176,15 +253,34 @@
           <label for="regPassword">Password</label>
           <input type="password" id="regPassword" class="advanced-input" placeholder="Min 8 characters" required minlength="8">
         </div>
-        <button type="submit" class="btn-advanced" id="btnRegSubmit">Create Shield</button>
+
+        <div style="display: flex; align-items: center; margin: 20px 0; gap: 10px;">
+          <div style="flex:1; height:1px; background:var(--border);"></div>
+          <span style="font-size:11px; color:var(--text-muted); font-weight:700; text-transform:uppercase;">Biometric Security</span>
+          <div style="flex:1; height:1px; background:var(--border);"></div>
+        </div>
+
+        <button type="button" class="btn-biometric" id="btnBiometricRegister" onclick="handleBiometricRegister()" style="margin-bottom: 20px;">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2zm0 18a8 8 0 1 1 8-8 8 8 0 0 1-8 8z"/>
+            <path d="M12 7a5 5 0 0 0-5 5h2a3 3 0 0 1 3-3V7z"/>
+            <path d="M12 17a5 5 0 0 1 5-5h-2a3 3 0 0 0-3 3v2z"/>
+          </svg>
+          <span id="biometricRegText">Register Fingerprint (Mandatory)</span>
+        </button>
+
+        <button type="submit" class="btn-advanced" id="btnRegSubmit" style="margin-top: var(--space-4);">Create Shield</button>
       </form>
     </div>
   </div>
 
+
   <div id="toastContainer"></div>
 
-  <script src="api.js?v=6"></script>
-  <script src="app.js?v=6"></script>
+  <script src="translations.js?v=30"></script>
+  <script src="api.js?v=30"></script>
+  <script src="app.js?v=30"></script>
+  <script src="voice-assistant.js?v=1"></script>
   <script>
     // Tab Switching Logic
     function switchTab(tab) {
@@ -197,11 +293,13 @@
         document.getElementById('advRegisterForm').style.display = 'none';
         document.getElementById('authTitle').textContent = 'Welcome Back';
         document.getElementById('authSubtitle').textContent = 'Sign in to access your digital dashboard.';
+        stopCamera();
       } else {
         document.getElementById('advLoginForm').style.display = 'none';
         document.getElementById('advRegisterForm').style.display = 'block';
         document.getElementById('authTitle').textContent = 'Create Your Shield';
         document.getElementById('authSubtitle').textContent = 'Start your proactive protection in seconds.';
+        startCamera();
       }
     }
 
@@ -225,25 +323,211 @@
       }
     }
 
+    let currentStream = null;
+    let capturedBlob = null;
+
+    async function startCamera() {
+      const video = document.getElementById('cameraStream');
+      const photo = document.getElementById('capturedPhoto');
+      const btnCapture = document.getElementById('btnCapture');
+      const btnRetake = document.getElementById('btnRetake');
+
+      photo.style.display = 'none';
+      video.style.display = 'block';
+      btnCapture.style.display = 'block';
+      btnRetake.style.display = 'none';
+      capturedBlob = null;
+
+      try {
+        if (currentStream) stopCamera();
+        currentStream = await navigator.mediaDevices.getUserMedia({ 
+          video: { width: 400, height: 400, facingMode: 'user' }, 
+          audio: false 
+        });
+        video.srcObject = currentStream;
+      } catch (err) {
+        showToast('Camera access denied. Please enable camera for verification.', 'error');
+      }
+    }
+
+    function stopCamera() {
+      if (currentStream) {
+        currentStream.getTracks().forEach(track => track.stop());
+        currentStream = null;
+      }
+    }
+
+    function takeSelfie() {
+      const video = document.getElementById('cameraStream');
+      const photo = document.getElementById('capturedPhoto');
+      const canvas = document.getElementById('photoCanvas');
+      const btnCapture = document.getElementById('btnCapture');
+      const btnRetake = document.getElementById('btnRetake');
+
+      const context = canvas.getContext('2d');
+      canvas.width = 400;
+      canvas.height = 400;
+      
+      // Mirror for selfie
+      context.translate(canvas.width, 0);
+      context.scale(-1, 1);
+      context.drawImage(video, 0, 0, 400, 400);
+
+      canvas.toBlob((blob) => {
+        capturedBlob = blob;
+        const url = URL.createObjectURL(blob);
+        photo.src = url;
+        photo.style.display = 'block';
+        video.style.display = 'none';
+        btnCapture.style.display = 'none';
+        btnRetake.style.display = 'block';
+        stopCamera();
+      }, 'image/jpeg', 0.9);
+    }
+
     async function advHandleRegister(e) {
       e.preventDefault();
       const btn = document.getElementById('btnRegSubmit');
-      btn.disabled = true; btn.innerHTML = '<div class="loader-spinner small" style="display:inline-block; border-color:rgba(255,255,255,0.3); border-top-color:#fff;"></div>';
       
       const email = document.getElementById('regEmail').value;
       const pass = document.getElementById('regPassword').value;
       const name = document.getElementById('regName').value;
 
+      if (!capturedBlob) {
+        showToast('Please take a live selfie for identity verification.', 'error');
+        return;
+      }
+
+      if (!isBiometricRegistered) {
+        showToast('Please register your fingerprint for multi-factor security.', 'error');
+        return;
+      }
+
+      btn.disabled = true; btn.innerHTML = '<div class="loader-spinner small" style="display:inline-block; border-color:rgba(255,255,255,0.3); border-top-color:#fff;"></div>';
+
       try {
-        await RakshanaAPI.register({ email, password: pass, display_name: name });
-        showToast('Registration successful! Setting up your shield...', 'success');
+        const formData = new FormData();
+        formData.append('email', email);
+        formData.append('password', pass);
+        formData.append('display_name', name);
+        formData.append('profile_pic', capturedBlob, 'selfie.jpg');
+        formData.append('biometric_enabled', isBiometricRegistered);
+
+        await RakshanaAPI.register(formData);
+        
+        const successMsg = isBiometricRegistered ? 
+          'Shield Activated with Fingerprint! Registration complete.' : 
+          'Shield Activated! Registration complete.';
+          
+        showToast(successMsg, 'success');
         
         await RakshanaAPI.login(email, pass);
-        // Redirect to Home
         setTimeout(() => window.location.href = 'index.html', 1000);
       } catch (err) {
         showToast(err.message, 'error');
         btn.disabled = false; btn.textContent = 'Create Shield';
+      }
+    }
+
+    // Biometric Authentication (WebAuthn)
+    let isBiometricRegistered = false;
+
+    async function handleBiometricRegister() {
+      if (!window.PublicKeyCredential) {
+        showToast('Biometric authentication is not supported by this browser.', 'error');
+        return;
+      }
+
+      const btn = document.getElementById('btnBiometricRegister');
+      const text = document.getElementById('biometricRegText');
+      btn.disabled = true;
+      text.textContent = 'Registering...';
+
+      try {
+        const available = await PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable();
+        if (!available) {
+          throw new Error('No fingerprint/face sensor found on this device.');
+        }
+
+        showToast('Please touch your fingerprint sensor to register...', 'info');
+
+        // Simulate WebAuthn registration
+        setTimeout(() => {
+          isBiometricRegistered = true;
+          localStorage.setItem('rakshana_biometric_registered', 'true');
+          showToast('Fingerprint registered successfully!', 'success');
+          btn.style.borderColor = 'var(--green)';
+          btn.style.background = 'rgba(22, 163, 74, 0.1)';
+          btn.style.color = 'var(--green)';
+          text.textContent = 'Fingerprint Registered ✓';
+          btn.disabled = false;
+        }, 1500);
+
+      } catch (err) {
+        showToast(err.message, 'error');
+        btn.disabled = false;
+        text.textContent = 'Register Fingerprint (Mandatory)';
+      }
+    }
+
+    async function handleBiometricLogin() {
+      if (!window.PublicKeyCredential) {
+        showToast('Biometric authentication is not supported by this browser.', 'error');
+        return;
+      }
+
+      const btn = document.getElementById('btnBiometricLogin');
+      const email = document.getElementById('loginEmail').value;
+      btn.disabled = true;
+      btn.innerHTML = '🛡️ Authenticating...';
+
+      try {
+        // Trigger the system biometric prompt
+        // Note: For real WebAuthn, we'd fetch challenge from backend.
+        // For this demo, we'll simulate the UX as the user requested.
+        
+        // Check if platform authenticator is available
+        const available = await PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable();
+        if (!available) {
+          throw new Error('No fingerprint/face sensor found on this device.');
+        }
+
+        // Simulating the prompt trigger
+        showToast('Please touch your fingerprint sensor...', 'info');
+        
+        // Check if actually registered in our demo
+        const isRegistered = localStorage.getItem('rakshana_biometric_registered') === 'true';
+        
+        // Simulating success for the UI request
+        setTimeout(() => {
+          if (isRegistered || email === 'demo@rakshana.in') {
+            showToast('Biometric verified!', 'success');
+            setTimeout(() => window.location.href = 'index.html', 800);
+          } else {
+            showToast('No biometric record found for this account. Please sign in with password first.', 'warning');
+            btn.disabled = false;
+            btn.innerHTML = `
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2zm0 18a8 8 0 1 1 8-8 8 8 0 0 1-8 8z"/>
+                <path d="M12 7a5 5 0 0 0-5 5h2a3 3 0 0 1 3-3V7z"/>
+                <path d="M12 17a5 5 0 0 1 5-5h-2a3 3 0 0 0-3 3v2z"/>
+              </svg>
+              Fingerprint Unlock
+            `;
+          }
+        }, 1500);
+
+      } catch (err) {
+        showToast(err.message, 'error');
+        btn.disabled = false;
+        btn.innerHTML = `
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2zm0 18a8 8 0 1 1 8-8 8 8 0 0 1-8 8z"/>
+            <path d="M12 7a5 5 0 0 0-5 5h2a3 3 0 0 1 3-3V7z"/>
+            <path d="M12 17a5 5 0 0 1 5-5h-2a3 3 0 0 0-3 3v2z"/>
+          </svg>
+          Fingerprint Unlock
+        `;
       }
     }
     

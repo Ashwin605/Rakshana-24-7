@@ -73,11 +73,41 @@ const RakshanaAPI = {
     return data;
   },
 
-  async register(userData) {
-    const data = await this.request('/auth/register', {
+  async biometricLogin(biometricData) {
+    const data = await this.request('/auth/biometric-login', {
       method: 'POST',
-      body: JSON.stringify(userData),
+      body: JSON.stringify(biometricData),
     });
+    this.saveAuth(data);
+    return data;
+  },
+
+  async registerBiometrics(registrationData) {
+    return this.request('/auth/register-biometrics', {
+      method: 'POST',
+      body: JSON.stringify(registrationData),
+    });
+  },
+
+  async register(userData) {
+    const isFormData = userData instanceof FormData;
+    const options = {
+      method: 'POST',
+      body: isFormData ? userData : JSON.stringify(userData),
+    };
+    
+    // If NOT FormData, we need to set JSON header. 
+    // fetch automatically sets correct multipart/form-data with boundary if body is FormData.
+    if (!isFormData) {
+      options.headers = { 'Content-Type': 'application/json' };
+    } else {
+      // For FormData, we must NOT set Content-Type header manually, 
+      // but we still need the Auth token if any (though usually not for register)
+      options.headers = {};
+      if (this.token) options.headers['Authorization'] = `Bearer ${this.token}`;
+    }
+
+    const data = await this.request('/auth/register', options);
     this.saveAuth(data);
     return data;
   },

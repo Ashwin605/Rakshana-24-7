@@ -2,7 +2,7 @@
    RAKSHANA 24/7 — Service Worker (PWA)
    ============================================ */
 
-const CACHE_NAME = 'rakshana-v2';
+const CACHE_NAME = 'rakshana-v6';
 const urlsToCache = [
   '/',
   '/index.html',

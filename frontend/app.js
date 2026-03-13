@@ -19,6 +19,7 @@
   });
 
   async function initApp() {
+    initActiveNavLink();
     initParticles();
     initScrollEffects();
     initMobileMenu();
@@ -33,6 +34,41 @@
       updateAuthUI(true);
       loadDashboardData();
     }
+  }
+
+  // ── Active Navigation Link (Page-based) ──
+  function initActiveNavLink() {
+    const navLinks = document.querySelectorAll('.nav-links a');
+    if (!navLinks.length) return;
+
+    // Get the current page filename from the URL
+    const path = window.location.pathname;
+    const currentPage = path.substring(path.lastIndexOf('/') + 1) || 'index.html';
+
+    // Map of nav link href values to their corresponding pages
+    const pageMap = {
+      'index.html': 'home',
+      'how-it-works.html': 'howItWorks',
+      'legal.html': 'legalRights',
+      'scan.html': 'scan',
+      'report.html': 'report',
+      'dashboard.html': 'dashboard',
+    };
+
+    navLinks.forEach(link => {
+      const href = link.getAttribute('href');
+      if (!href) return;
+
+      // Extract the filename from the link href
+      const linkPage = href.substring(href.lastIndexOf('/') + 1).split('#')[0].split('?')[0];
+
+      // Match the current page with the nav link
+      if (linkPage === currentPage) {
+        link.classList.add('active');
+      } else {
+        link.classList.remove('active');
+      }
+    });
   }
 
   // ── Particle Background ──
@@ -136,17 +172,25 @@
     const navLinks = document.querySelectorAll('.nav-links a');
     const scrollPos = window.scrollY + 150;
 
+    // Only highlight hash-based links on scroll; preserve page-based active state
+    const hashLinks = Array.from(navLinks).filter(link => {
+      const href = link.getAttribute('href') || '';
+      return href.startsWith('#');
+    });
+    if (!hashLinks.length) return;
+
     sections.forEach(section => {
       const top = section.offsetTop;
       const height = section.offsetHeight;
       const id = section.getAttribute('id');
       if (scrollPos >= top && scrollPos < top + height) {
-        navLinks.forEach(link => {
+        hashLinks.forEach(link => {
           link.classList.remove('active');
           if (link.getAttribute('href') === '#' + id) link.classList.add('active');
         });
       }
     });
+
   }
 
   // ── Mobile Menu ──
@@ -275,22 +319,16 @@
     }
   };
 
-  // Smart CTA handler — if already logged in, go to dashboard
+  // Smart CTA handler — if already logged in, go to dashboard, else auth
   window.handleGetProtected = function(e) {
     if (e) e.preventDefault();
     if (RakshanaAPI.isLoggedIn()) {
-      // Already logged in — scroll to dashboard
-      const dashboard = document.getElementById('dashboard-preview');
-      if (dashboard) {
-        const nav = document.getElementById('navbar');
-        const offset = nav ? nav.offsetHeight + 20 : 20;
-        window.scrollTo({ top: dashboard.offsetTop - offset, behavior: 'smooth' });
-      }
-      showToast(`You're already protected, ${RakshanaAPI.user?.display_name || 'User'}! 🛡️`, 'info');
+      window.location.href = 'dashboard.html';
     } else {
-      openAuthModal('register');
+      window.location.href = 'auth.html';
     }
   };
+
 
   window.closeAuthModal = function() {
     const modal = document.getElementById('authModal');
@@ -366,14 +404,6 @@
     }
   };
 
-  window.handleGetProtected = function(e) {
-    if (e) e.preventDefault();
-    if (RakshanaAPI.isLoggedIn()) {
-      window.location.href = 'dashboard.html';
-    } else {
-      window.location.href = 'auth.html';
-    }
-  };
 
   function updateAuthUI(loggedIn) {
     const signInBtn = document.getElementById('btnSignIn');
@@ -417,12 +447,43 @@
   //   MINI NOTIFICATIONS
   // ═══════════════════════════════════════════
   
+  let miniNotifFilter = 'all';
+
+  window.filterMiniNotifs = function(filter, e) {
+    if (e) e.stopPropagation();
+    miniNotifFilter = filter;
+    document.querySelectorAll('.filter-chip').forEach(chip => {
+      chip.classList.toggle('active', chip.dataset.filter === filter);
+    });
+    loadMiniNotifications();
+  };
+
+  window.markAllAsRead = async function(e) {
+    if (e) e.stopPropagation();
+    if (!RakshanaAPI.isLoggedIn()) return;
+    try {
+      // Typically API would have a bulk endpoint, but we'll use what we have
+      const data = await RakshanaAPI.getAlerts();
+      const unread = (data.alerts || []).filter(a => !a.is_read);
+      if (unread.length === 0) return;
+      
+      await Promise.all(unread.map(a => RakshanaAPI.markAlertRead(a.id)));
+      showToast('All notifications marked as read', 'success');
+      loadMiniNotifications();
+      if (typeof loadDashboardData === 'function') loadDashboardData();
+    } catch (err) {
+      showToast('Action failed', 'error');
+    }
+  };
+
   window.toggleMiniNotif = function(e) {
     if (e) e.stopPropagation();
     const windowEl = document.getElementById('miniNotifWindow');
     if (windowEl) {
-      windowEl.classList.toggle('open');
-      if (windowEl.classList.contains('open')) {
+      const isOpen = windowEl.classList.contains('open');
+      document.querySelectorAll('.mini-notif-window').forEach(w => w.classList.remove('open'));
+      if (!isOpen) {
+        windowEl.classList.add('open');
         loadMiniNotifications();
       }
     }
@@ -439,30 +500,61 @@
   async function loadMiniNotifications() {
     const listEl = document.getElementById('miniNotifList');
     const badgeEl = document.getElementById('miniBadgeAlert');
+    const countEl = document.getElementById('miniNotifCount');
 
     if (!RakshanaAPI.isLoggedIn()) {
-      if (listEl) listEl.innerHTML = '<div class="empty-state" style="padding: 20px; text-align: center;"><p>Please <a href="auth.html" style="color: var(--primary); font-weight: 600;">Sign In</a> to view your active threat alerts.</p></div>';
+      if (listEl) listEl.innerHTML = `
+        <div class="empty-state">
+          <div class="empty-state-icon">🔒</div>
+          <p>Please <a href="auth.html" style="color: var(--primary); font-weight: 700;">Sign In</a> to view alerts.</p>
+        </div>`;
       if (badgeEl) badgeEl.style.display = 'none';
+      if (countEl) countEl.textContent = '0';
       return;
     }
 
     try {
       const data = await RakshanaAPI.getAlerts();
+      let alerts = data.alerts || [];
       
-      const unreadCount = (data.alerts || []).filter(a => !a.is_read).length;
+      const unreadCount = alerts.filter(a => !a.is_read).length;
       if (badgeEl) {
-        badgeEl.style.display = unreadCount > 0 ? 'block' : 'none';
+        const oldCount = parseInt(badgeEl.textContent || '0', 10);
+        badgeEl.textContent = unreadCount;
+        badgeEl.style.display = 'flex';
+        
+        // Shake bell if new alerts arrived
+        if (unreadCount > oldCount) {
+          const bell = document.getElementById('btnNavNotif');
+          if (bell) {
+            bell.classList.add('shake-bell');
+            setTimeout(() => bell.classList.remove('shake-bell'), 600);
+          }
+        }
       }
+      if (countEl) countEl.textContent = unreadCount;
 
       if (!listEl) return;
-      if (!data.alerts || data.alerts.length === 0) {
-        listEl.innerHTML = '<div class="empty-state" style="padding: 20px;"><p>No threats detected.</p></div>';
+
+      // Filter
+      if (miniNotifFilter === 'unread') alerts = alerts.filter(a => !a.is_read);
+      else if (miniNotifFilter === 'critical') alerts = alerts.filter(a => a.severity === 'critical');
+      else if (miniNotifFilter === 'alert') alerts = alerts.filter(a => a.severity === 'alert');
+      else if (miniNotifFilter === 'watch') alerts = alerts.filter(a => a.severity === 'watch');
+      else if (miniNotifFilter === 'safe') alerts = alerts.filter(a => a.severity === 'safe');
+
+      if (alerts.length === 0) {
+        listEl.innerHTML = `
+          <div class="empty-state">
+            <div class="empty-state-icon">🛡️</div>
+            <p>${miniNotifFilter === 'all' ? "No threats detected." : "No matching alerts."}</p>
+          </div>`;
         return;
       }
 
-      // Show top 5
-      const recent = data.alerts.slice(0, 5);
-      listEl.innerHTML = recent.map(a => {
+      // Show top 10 in mini window
+      const recent = alerts.slice(0, 10);
+      listEl.innerHTML = recent.map((a, i) => {
         let icon = '🛡️';
         if (a.severity === 'critical') icon = '🚨';
         else if (a.severity === 'alert') icon = '⚠️';
@@ -473,11 +565,18 @@
         else if (a.severity === 'alert') color = 'var(--orange)';
         else if (a.severity === 'watch') color = 'var(--amber)';
 
+        const time = a.detected_at ? timeAgo(new Date(a.detected_at)) : 'Recently';
+
         return `
-          <div class="mini-notif-item" onclick="window.location.href='dashboard.html'" style="cursor: pointer; ${a.is_read ? 'opacity: 0.7;' : 'background: rgba(244,114,182,0.05);'}">
-            <div class="mini-notif-icon" style="background: rgba(0,0,0,0.02); color: ${color};">${icon}</div>
+          <div class="mini-notif-item ${!a.is_read ? 'unread' : ''} notif-item-enter" 
+               style="animation-delay: ${i * 0.05}s; cursor: pointer;"
+               onclick="window.location.href='dashboard.html'">
+            <div class="mini-notif-icon" style="color: ${color};">${icon}</div>
             <div class="mini-notif-content">
-              <div class="mini-notif-title">${a.title || 'Threat Alert'}</div>
+              <div class="mini-notif-meta">
+                <span class="mini-notif-title">${a.title || 'Threat Alert'}</span>
+                <span class="mini-notif-time">${time}</span>
+              </div>
               <div class="mini-notif-desc">${a.explanation || a.description}</div>
             </div>
           </div>
@@ -485,7 +584,7 @@
       }).join('');
 
     } catch (e) {
-      if (listEl) listEl.innerHTML = '<div class="empty-state" style="padding: 20px;"><p>Error loading.</p></div>';
+      if (listEl) listEl.innerHTML = '<div class="empty-state"><p>Error loading.</p></div>';
     }
   }
 
@@ -1306,5 +1405,206 @@
       navigator.serviceWorker.register('sw.js').catch(() => {});
     });
   }
+
+  // ═══════════════════════════════════════════
+  //   LANGUAGE PICKER
+  // ═══════════════════════════════════════════
+
+  window.toggleLangPicker = function(e) {
+    if (e) e.stopPropagation();
+    const wrapper = document.getElementById('langPickerWrapper');
+    if (wrapper) wrapper.classList.toggle('open');
+  };
+
+  window.selectLanguage = function(lang, e) {
+    if (e) e.stopPropagation();
+    if (typeof RakshanaI18n !== 'undefined') {
+      RakshanaI18n.setLanguage(lang);
+      showToast(`Language changed to ${RAKSHANA_LANGS[lang].native}`, 'success');
+    }
+    const wrapper = document.getElementById('langPickerWrapper');
+    if (wrapper) wrapper.classList.remove('open');
+  };
+
+  // Close language picker on click outside
+  document.addEventListener('click', (e) => {
+    const wrapper = document.getElementById('langPickerWrapper');
+    if (wrapper && wrapper.classList.contains('open') && !wrapper.contains(e.target)) {
+      wrapper.classList.remove('open');
+    }
+  });
+
+  // ═══════════════════════════════════════════
+  //   24/7 PROACTIVE SHAKE SOS (Advanced)
+  // ═══════════════════════════════════════════
+  let shakeSOSInstance = null;
+
+  class ShakeSOS {
+    constructor() {
+      this.lastX = null;
+      this.lastY = null;
+      this.lastZ = null;
+      this.threshold = 30; // Sensitive but robust
+      this.minShakeCount = 6; // Requires rapid successive motion
+      this.shakeCount = 0;
+      this.lastShakeTime = 0;
+      this.isTriggered = false;
+      this.timer = null;
+      this.countdown = 5;
+      
+      this.init();
+    }
+
+    init() {
+      if (window.DeviceMotionEvent) {
+        window.addEventListener('devicemotion', (e) => this.motionHandler(e), false);
+        console.log('🛡️ Rakshana 24/7: Fail-safe monitoring active.');
+      }
+    }
+
+    motionHandler(event) {
+      if (this.isTriggered) return;
+
+      const acc = event.accelerationIncludingGravity;
+      if (!acc) return;
+
+      const curX = acc.x;
+      const curY = acc.y;
+      const curZ = acc.z;
+
+      if (this.lastX !== null) {
+        const deltaX = Math.abs(this.lastX - curX);
+        const deltaY = Math.abs(this.lastY - curY);
+        const deltaZ = Math.abs(this.lastZ - curZ);
+
+        if ((deltaX > this.threshold && deltaY > this.threshold) || 
+            (deltaX > this.threshold && deltaZ > this.threshold) || 
+            (deltaY > this.threshold && deltaZ > this.threshold)) {
+          
+          const curTime = Date.now();
+          if ((curTime - this.lastShakeTime) < 300) {
+            this.shakeCount++;
+            if (this.shakeCount >= this.minShakeCount) {
+              this.trigger();
+              this.shakeCount = 0;
+            }
+          } else {
+            this.shakeCount = 1;
+          }
+          this.lastShakeTime = curTime;
+        }
+      }
+
+      this.lastX = curX;
+      this.lastY = curY;
+      this.lastZ = curZ;
+    }
+
+    trigger() {
+      this.isTriggered = true;
+      const overlay = document.getElementById('sosOverlay');
+      if (overlay) overlay.classList.add('active');
+      document.body.classList.add('sos-active');
+      this.countdown = 5;
+      this.updateTimerUI();
+
+      this.startSiren();
+
+      if (navigator.vibrate) navigator.vibrate([200, 100, 200, 100, 500]);
+
+      this.timer = setInterval(() => {
+        this.countdown--;
+        this.updateTimerUI();
+        if (navigator.vibrate) navigator.vibrate(200);
+        if (this.countdown <= 0) this.broadcast();
+      }, 1000);
+    }
+
+    startSiren() {
+      if (!window.AudioContext && !window.webkitAudioContext) return;
+      try {
+        this.audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        this.oscillator = this.audioCtx.createOscillator();
+        this.gainNode = this.audioCtx.createGain();
+        this.oscillator.type = 'sawtooth';
+        this.oscillator.frequency.setValueAtTime(500, this.audioCtx.currentTime);
+        this.oscillator.connect(this.gainNode);
+        this.gainNode.connect(this.audioCtx.destination);
+        this.gainNode.gain.setValueAtTime(0.2, this.audioCtx.currentTime);
+        this.oscillator.start();
+        
+        this.sirenInterval = setInterval(() => {
+          if (this.audioCtx) {
+            this.oscillator.frequency.exponentialRampToValueAtTime(1200, this.audioCtx.currentTime + 0.4);
+            this.oscillator.frequency.exponentialRampToValueAtTime(500, this.audioCtx.currentTime + 0.8);
+          }
+        }, 800);
+      } catch (e) {}
+    }
+
+    stopSiren() {
+      if (this.sirenInterval) clearInterval(this.sirenInterval);
+      if (this.oscillator) try { this.oscillator.stop(); } catch(e){}
+      if (this.audioCtx) try { this.audioCtx.close(); } catch(e){}
+    }
+
+    updateTimerUI() {
+      const el = document.getElementById('sosTimer');
+      if (el) el.textContent = this.countdown;
+    }
+
+    cancel() {
+      clearInterval(this.timer);
+      this.stopSiren();
+      this.isTriggered = false;
+      const overlay = document.getElementById('sosOverlay');
+      if (overlay) overlay.classList.remove('active');
+      document.body.classList.remove('sos-active');
+      showToast('24/7 Protection: SOS Standby. 🛡️', 'success');
+    }
+
+    broadcast() {
+      clearInterval(this.timer);
+      const overlay = document.getElementById('sosOverlay');
+      if (overlay) {
+        overlay.innerHTML = `<div class="sos-shield-icon" style="background:var(--green); animation:none;"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div><h2 class="sos-title">SHIELD ACTIVATED</h2><p class="sos-subtitle">Broadcasting coordinates to emergency responders. Help is on the way.</p><button class="btn-sos-cancel" onclick="cancelSOS()">CLOSE</button>`;
+      }
+      if (navigator.vibrate) navigator.vibrate([500, 200, 500, 200, 1000]);
+    }
+  }
+
+  window.initShakeSOS = function() {
+    if (!shakeSOSInstance) shakeSOSInstance = new ShakeSOS();
+  };
+
+  window.cancelSOS = function() {
+    if (shakeSOSInstance) shakeSOSInstance.cancel();
+  };
+
+  /** Autonomous 24/7 Activation on Interaction */
+  const autoActivateShield = async () => {
+    if (typeof DeviceMotionEvent !== 'undefined' && typeof DeviceMotionEvent.requestPermission === 'function') {
+      try {
+        const state = await DeviceMotionEvent.requestPermission();
+        if (state === 'granted') window.initShakeSOS();
+      } catch (e) {}
+    } else {
+      window.initShakeSOS();
+    }
+    
+    const btn = document.getElementById('sosToggleBtn');
+    if (btn) {
+      btn.classList.add('active');
+      const tooltip = btn.querySelector('.sos-tooltip');
+      if (tooltip) tooltip.textContent = '24/7 Shield Active';
+      showToast('Rakshana 24/7 Protection Active 🛡️', 'success');
+    }
+
+    document.removeEventListener('click', autoActivateShield);
+    document.removeEventListener('touchstart', autoActivateShield);
+  };
+
+  document.addEventListener('click', autoActivateShield);
+  document.addEventListener('touchstart', autoActivateShield);
 
 })();

@@ -23,7 +23,8 @@
     href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Noto+Sans+Telugu:wght@400;600;700&display=swap"
     rel="stylesheet">
 
-  <link rel="stylesheet" href="styles.css?v=5">
+  <link rel="stylesheet" href="styles.css?v=12">
+  <link rel="stylesheet" href="voice-assistant.css?v=1">
 </head>
 
 <body>
@@ -76,14 +77,55 @@
 
       
       <div class="nav-links" id="navLinks">
-        <a href="index.html">Home</a>
-        <a href="how-it-works.html">How It Works</a>
-        <a href="legal.html">Legal Rights</a>
-        <a href="scan.html">Scan</a>
-        <a href="report.html">Report</a>
+        <a href="index.html" data-i18n="nav.home">Home</a>
+        <a href="how-it-works.html" data-i18n="nav.howItWorks">How It Works</a>
+        <a href="legal.html" data-i18n="nav.legalRights">Legal Rights</a>
+        <a href="scan.html" data-i18n="nav.scan">Scan</a>
+        <a href="report.html" data-i18n="nav.report">Report</a>
       </div>
 
       <div class="nav-cta" id="navCta">
+        <div class="nav-notif-wrapper" id="navNotifWrapper" style="position:relative;">
+          <button class="btn-icon-notif" id="btnNavNotif" onclick="toggleMiniNotif(event)">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+              <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+            </svg>
+            <span class="badge-dot pulse-dot" id="miniBadgeAlert">0</span>
+          </button>
+          
+          <div class="mini-notif-window glass-card" id="miniNotifWindow">
+            <div class="mini-notif-header">
+              <div class="mini-notif-title-row">
+                <h4>Shield Notifications</h4>
+                <span class="notif-count-badge" id="miniNotifCount">0</span>
+              </div>
+              <div class="mini-notif-actions">
+                <button class="btn-text-action" onclick="markAllAsRead(event)">Mark all read</button>
+                <a href="dashboard.html" class="btn-text-action">View All</a>
+              </div>
+            </div>
+            <div class="mini-notif-filters">
+              <button class="filter-chip active" data-filter="all" onclick="filterMiniNotifs('all', event)">All</button>
+              <button class="filter-chip" data-filter="critical" onclick="filterMiniNotifs('critical', event)">Critical</button>
+              <button class="filter-chip" data-filter="alert" onclick="filterMiniNotifs('alert', event)">High Alert</button>
+              <button class="filter-chip" data-filter="watch" onclick="filterMiniNotifs('watch', event)">Watch</button>
+              <button class="filter-chip" data-filter="safe" onclick="filterMiniNotifs('safe', event)">Safe</button>
+              <button class="filter-chip" data-filter="unread" onclick="filterMiniNotifs('unread', event)">Unread</button>
+            </div>
+            <div class="mini-notif-body" id="miniNotifList">
+               <div class="empty-state">
+                 <div class="empty-state-icon">🛡️</div>
+                 <p>Checking for threats...</p>
+               </div>
+            </div>
+            <div class="mini-notif-footer">
+              <p>Watching for threats 24/7</p>
+              <div class="live-status-dot"></div>
+            </div>
+          </div>
+        </div>
+
         <button class="btn btn-ghost" id="btnSignIn" onclick="window.location.href='auth.html'">Sign In</button>
         <button class="btn btn-primary" id="btnGetProtected" onclick="window.location.href='dashboard.html'">My Dashboard</button>
       </div>
@@ -207,19 +249,34 @@
   <footer class="footer" id="footer">
     <div class="container">
       <div class="footer-content">
-        <p class="footer-brand"><strong>Rakshana 24/7</strong> — <span class="telugu">రక్షణ 24/7</span> — Proactive
-          Digital Safety for Women</p>
+        <p class="footer-brand" data-i18n="footer.brand" data-i18n-html="true"><strong>Rakshana 24/7</strong> � Proactive Digital Safety for Women</p>
         <div class="footer-links">
-          <a href="legal.html">Legal Rights</a>
-          <span>·</span>
-          <a href="index.html#resources">Resources</a>
-          <span>·</span>
-          <a href="report.html">Report Anonymously</a>
+          <a href="legal.html" data-i18n="footer.legalRights">Legal Rights</a>
+          <span>�</span>
+          <a href="index.html#resources" data-i18n="footer.resources">Resources</a>
+          <span>�</span>
+          <a href="report.html" data-i18n="footer.reportAnonymously">Report Anonymously</a>
         </div>
-        <p class="footer-tagline">"Light that travels ahead of the harm."</p>
+        <p class="footer-tagline" data-i18n="footer.tagline">"Light that travels ahead of the harm."</p>
+        <div class="lang-picker-wrapper" id="langPickerWrapper">
+          <button class="lang-picker-btn" onclick="toggleLangPicker(event)" aria-label="Change language">
+            <span class="lang-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg></span>
+            <span id="langPickerCurrent">English</span>
+            <span class="lang-chevron"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span>
+          </button>
+          <div class="lang-dropdown" id="langDropdown">
+            <div class="lang-dropdown-header" data-i18n="footer.language">Language</div>
+            <button class="lang-option active" data-lang="en" onclick="selectLanguage('en', event)"><span class="lang-option-flag">EN</span><div class="lang-option-info"><span class="lang-option-native">English</span><span class="lang-option-english">English</span></div><span class="lang-option-check"><svg viewBox="0 0 24 24" fill="none"><polyline points="20 6 9 17 4 12"/></svg></span></button>
+            <button class="lang-option" data-lang="hi" onclick="selectLanguage('hi', event)"><span class="lang-option-flag">HI</span><div class="lang-option-info"><span class="lang-option-native">Hindi</span><span class="lang-option-english">Hindi</span></div><span class="lang-option-check"><svg viewBox="0 0 24 24" fill="none"><polyline points="20 6 9 17 4 12"/></svg></span></button>
+            <button class="lang-option" data-lang="te" onclick="selectLanguage('te', event)"><span class="lang-option-flag">TE</span><div class="lang-option-info"><span class="lang-option-native">Telugu</span><span class="lang-option-english">Telugu</span></div><span class="lang-option-check"><svg viewBox="0 0 24 24" fill="none"><polyline points="20 6 9 17 4 12"/></svg></span></button>
+            <button class="lang-option" data-lang="kn" onclick="selectLanguage('kn', event)"><span class="lang-option-flag">KN</span><div class="lang-option-info"><span class="lang-option-native">Kannada</span><span class="lang-option-english">Kannada</span></div><span class="lang-option-check"><svg viewBox="0 0 24 24" fill="none"><polyline points="20 6 9 17 4 12"/></svg></span></button>
+            <button class="lang-option" data-lang="ml" onclick="selectLanguage('ml', event)"><span class="lang-option-flag">ML</span><div class="lang-option-info"><span class="lang-option-native">Malayalam</span><span class="lang-option-english">Malayalam</span></div><span class="lang-option-check"><svg viewBox="0 0 24 24" fill="none"><polyline points="20 6 9 17 4 12"/></svg></span></button>
+            <button class="lang-option" data-lang="ta" onclick="selectLanguage('ta', event)"><span class="lang-option-flag">TA</span><div class="lang-option-info"><span class="lang-option-native">Tamil</span><span class="lang-option-english">Tamil</span></div><span class="lang-option-check"><svg viewBox="0 0 24 24" fill="none"><polyline points="20 6 9 17 4 12"/></svg></span></button>
+          </div>
+        </div>
         <div class="api-status" id="apiStatus">
           <span class="dot dot-checking"></span>
-          <span>Checking API…</span>
+          <span>Checking API...</span>
         </div>
       </div>
     </div>
@@ -228,8 +285,9 @@
   <!-- Toast Container -->
   <div id="toastContainer"></div>
 
-  <script src="api.js?v=5"></script>
-  <script src="app.js?v=5"></script>
+  <script src="translations.js?v=13"></script><script src="api.js?v=13"></script>
+  <script src="app.js?v=13"></script>
+  <script src="voice-assistant.js?v=1"></script>
 
 </body>
 

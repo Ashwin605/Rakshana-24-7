@@ -17,7 +17,7 @@
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🛡️</text></svg>">
 
   <!-- Stylesheet -->
-  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="styles.css?v=30">
 </head>
 <body>
 
@@ -49,16 +49,16 @@
       </a>
 
       <div class="nav-links" id="navLinks">
-        <a href="#problem" id="navProblem">The Problem</a>
-        <a href="#how-it-works" id="navHow">How It Works</a>
-        <a href="#legal" id="navLegal">Legal Rights</a>
-        <a href="#resources" id="navResources">Resources</a>
-        <a href="#report" id="navReport">Anonymous Report</a>
+        <a href="frontend/index.html" data-i18n="nav.home">Home</a>
+        <a href="frontend/how-it-works.html" data-i18n="nav.howItWorks">How It Works</a>
+        <a href="frontend/legal.html" data-i18n="nav.legalRights">Legal Rights</a>
+        <a href="frontend/scan.html" data-i18n="nav.scan">Scan</a>
+        <a href="frontend/report.html" data-i18n="nav.report">Report</a>
       </div>
 
       <div class="nav-cta" id="navCta">
-        <a href="#" class="btn btn-ghost" id="btnSignIn">Sign In</a>
-        <a href="#cta" class="btn btn-primary" id="btnGetProtected">Get Protected</a>
+        <a href="frontend/auth.html" class="btn btn-ghost" id="btnSignIn" data-i18n="nav.signIn">Sign In</a>
+        <a href="#cta" class="btn btn-primary" id="btnGetProtected" data-i18n="nav.getProtected">Get Protected</a>
       </div>
 
       <button class="mobile-menu-toggle" id="mobileMenuToggle" aria-label="Toggle navigation menu">
@@ -73,29 +73,29 @@
   <section class="hero" id="hero">
     <div class="container">
       <div class="hero-content">
-        <div class="hero-badge">
+        <div class="hero-badge" data-i18n="hero.badge">
           <svg viewBox="0 0 16 16" fill="none"><path d="M8 1L14 4V8C14 12 11.2 15.4 8 16C4.8 15.4 2 12 2 8V4L8 1Z" fill="currentColor"/></svg>
-          Digital Safety for Women
+          AI-Powered Digital Safety
         </div>
 
         <h1 class="hero-title">
-          She shouldn't have to
-          <span class="highlight">wait</span> for the harm to find help.
+          <span data-i18n="hero.title.part1">She shouldn't have to</span>
+          <span class="highlight" data-i18n="hero.title.highlight">wait</span> <span data-i18n="hero.title.part2">for the harm to find help.</span>
         </h1>
 
-        <p class="hero-description">
-          Rakshana 24/7 monitors the internet for threats targeting you and alerts you before the harassment reaches your inbox, your phone, or your door.
+        <p class="hero-description" data-i18n="hero.desc" data-i18n-html="true">
+          Rakshana 24/7 monitors the internet for threats targeting you and alerts you <strong>before</strong> the harassment reaches your inbox, your phone, or your door.
         </p>
 
-        <p class="hero-quote">"I am scared, so I am protected."</p>
+        <p class="hero-quote" data-i18n="hero.quote">"I am scared, so I am protected."</p>
 
         <div class="hero-actions">
           <a href="#cta" class="btn btn-accent btn-lg" id="btnStartProtection">
             <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 2L17 6V10C17 15 13.8 19 10 20C6.2 19 3 15 3 10V6L10 2Z"/></svg>
-            Start Protection
+            <span data-i18n="hero.startProtection">Start Protection</span>
           </a>
-          <a href="#how-it-works" class="btn btn-outline btn-lg" id="btnSeeHow">
-            See How It Works
+          <a href="frontend/how-it-works.html" class="btn btn-outline btn-lg" id="btnSeeHow">
+            <span data-i18n="hero.seeHowItWorks">See How It Works</span>
           </a>
         </div>
       </div>
@@ -568,21 +568,73 @@
   <!-- ========== FOOTER ========== -->
   <footer class="footer" id="footer">
     <div class="container">
-      <p class="footer-brand">
-        <strong>Rakshana 24/7</strong> — <span class="telugu">రక్షణ 24/7</span> — Proactive Digital Safety for Women
-      </p>
-      <div class="footer-links">
-        <a href="#legal">Legal Rights & Cyber Law</a>
-        <span style="color: var(--color-dark-text-secondary);">·</span>
-        <a href="#resources">Resources</a>
-        <span style="color: var(--color-dark-text-secondary);">·</span>
-        <a href="#report">Report Anonymously</a>
+      <div class="footer-content">
+        <p class="footer-brand" data-i18n="footer.brand" data-i18n-html="true"><strong>Rakshana 24/7</strong> — <span class="telugu">రక్షణ 24/7</span> — Proactive Digital Safety for Women</p>
+        <div class="footer-links">
+          <a href="frontend/legal.html" data-i18n="footer.legalRights">Legal Rights</a>
+          <span>·</span>
+          <a href="frontend/index.html#resources" data-i18n="footer.resources">Resources</a>
+          <span>·</span>
+          <a href="frontend/report.html" data-i18n="footer.reportAnonymously">Report Anonymously</a>
+        </div>
+        <p class="footer-tagline" data-i18n="footer.tagline">"Light that travels ahead of the harm."</p>
+        <!-- Language Picker -->
+        <div class="lang-picker-wrapper" id="langPickerWrapper">
+          <button class="lang-picker-btn" onclick="toggleLangPicker(event)" aria-label="Change language">
+            <span class="lang-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg></span>
+            <span id="langPickerCurrent">🇬🇧 English</span>
+            <span class="lang-chevron"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span>
+          </button>
+          <div class="lang-dropdown" id="langDropdown">
+            <div class="lang-dropdown-header" data-i18n="footer.language">Language</div>
+            <button class="lang-option active" data-lang="en" onclick="selectLanguage('en', event)"><span class="lang-option-flag">🇬🇧</span><div class="lang-option-info"><span class="lang-option-native">English</span><span class="lang-option-english">English</span></div><span class="lang-option-check"><svg viewBox="0 0 24 24" fill="none"><polyline points="20 6 9 17 4 12"/></svg></span></button>
+            <button class="lang-option" data-lang="hi" onclick="selectLanguage('hi', event)"><span class="lang-option-flag">🇮🇳</span><div class="lang-option-info"><span class="lang-option-native">हिन्दी</span><span class="lang-option-english">Hindi</span></div><span class="lang-option-check"><svg viewBox="0 0 24 24" fill="none"><polyline points="20 6 9 17 4 12"/></svg></span></button>
+            <button class="lang-option" data-lang="te" onclick="selectLanguage('te', event)"><span class="lang-option-flag">🇮🇳</span><div class="lang-option-info"><span class="lang-option-native">తెలుగు</span><span class="lang-option-english">Telugu</span></div><span class="lang-option-check"><svg viewBox="0 0 24 24" fill="none"><polyline points="20 6 9 17 4 12"/></svg></span></button>
+            <button class="lang-option" data-lang="kn" onclick="selectLanguage('kn', event)"><span class="lang-option-flag">🇮🇳</span><div class="lang-option-info"><span class="lang-option-native">ಕನ್ನಡ</span><span class="lang-option-english">Kannada</span></div><span class="lang-option-check"><svg viewBox="0 0 24 24" fill="none"><polyline points="20 6 9 17 4 12"/></svg></span></button>
+            <button class="lang-option" data-lang="ml" onclick="selectLanguage('ml', event)"><span class="lang-option-flag">🇮🇳</span><div class="lang-option-info"><span class="lang-option-native">മലയാളം</span><span class="lang-option-english">Malayalam</span></div><span class="lang-option-check"><svg viewBox="0 0 24 24" fill="none"><polyline points="20 6 9 17 4 12"/></svg></span></button>
+            <button class="lang-option" data-lang="ta" onclick="selectLanguage('ta', event)"><span class="lang-option-flag">🇮🇳</span><div class="lang-option-info"><span class="lang-option-native">தமிழ்</span><span class="lang-option-english">Tamil</span></div><span class="lang-option-check"><svg viewBox="0 0 24 24" fill="none"><polyline points="20 6 9 17 4 12"/></svg></span></button>
+          </div>
+        </div>
       </div>
-      <p class="footer-tagline">"Light that travels ahead of the harm."</p>
     </div>
   </footer>
 
+  <!-- ========== EMERGENCY SOS OVERLAY ========== -->
+  <div class="sos-overlay" id="sosOverlay">
+    <div class="sos-shield-container">
+      <div class="sos-pulse-ring"></div>
+      <div class="sos-pulse-ring" style="animation-delay: 0.5s"></div>
+      <div class="sos-pulse-ring" style="animation-delay: 1s"></div>
+      <div class="sos-shield-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M12 2L20 7V12C20 18 15 21 12 22C9 21 4 18 4 12V7L12 2Z" />
+          <path d="M12 8V12" />
+          <path d="M12 16H12.01" />
+        </svg>
+      </div>
+    </div>
+    <div class="sos-timer" id="sosTimer">5</div>
+    <h2 class="sos-title">Emergency SOS Triggered</h2>
+    <p class="sos-subtitle">Shaking detected. Broadcasting your location and alert to emergency contacts in 5 seconds.</p>
+    <button class="btn-sos-cancel" onclick="cancelSOS()">CANCEL (I am safe)</button>
+  </div>
+
+  <!-- Floating SOS SOS Toggle -->
+  <div class="sos-toggle-btn" id="sosToggleBtn">
+    <div class="sos-tooltip">24/7 Shield Active</div>
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M12 2L20 7V12C20 18 15 21 12 22C9 21 4 18 4 12V7L12 2Z" />
+    </svg>
+  </div>
+
   <!-- JavaScript -->
-  <script src="app.js"></script>
+  <script src="frontend/translations.js?v=40"></script>
+  <script src="frontend/api.js?v=40"></script>
+  <script src="frontend/app.js?v=40"></script>
+  <script>
+    function toggleLangPicker(e){if(e)e.stopPropagation();var w=document.getElementById('langPickerWrapper');if(w)w.classList.toggle('open');}
+    function selectLanguage(lang,e){if(e)e.stopPropagation();if(typeof RakshanaI18n!=='undefined'){RakshanaI18n.setLanguage(lang);}var w=document.getElementById('langPickerWrapper');if(w)w.classList.remove('open');}
+    document.addEventListener('click',function(e){var w=document.getElementById('langPickerWrapper');if(w&&w.classList.contains('open')&&!w.contains(e.target))w.classList.remove('open');});
+  </script>
 </body>
 </html>
