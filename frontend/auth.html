@@ -4,6 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/png" href="assets/logo.png?v=3">
   <title>Rakshana 24/7 — Authentication</title>
   
   <link rel="stylesheet" href="styles.css?v=12">
@@ -158,6 +159,18 @@
     }
     .btn-camera.capture { background: var(--primary); color: white; border: none; }
     .btn-camera:hover { transform: translateY(-1px); box-shadow: var(--shadow-sm); }
+
+    /* Responsive Auth */
+    @media (max-width: 500px) {
+      .auth-container {
+        padding: var(--space-6) var(--space-4);
+        border-radius: var(--radius-lg);
+      }
+      .auth-title { font-size: var(--font-xl); }
+      .auth-page { padding: var(--space-4); }
+      .back-home { top: 10px; left: 10px; padding: 8px 12px; font-size: 12px; }
+      .auth-logo img { height: 75px !important; }
+    }
   </style>
 </head>
 
@@ -174,18 +187,7 @@
 
     <div class="auth-container">
       <div class="auth-header">
-        <a href="index.html" class="auth-logo">
-          <svg viewBox="0 0 40 40" fill="none">
-            <path d="M20 3L35 10V20C35 29.4 28.4 38 20 40C11.6 38 5 29.4 5 20V10L20 3Z" fill="url(#shield-grad)" stroke="none" />
-            <path d="M16 20L19 23L25 17" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" />
-            <defs>
-              <linearGradient id="shield-grad" x1="5" y1="3" x2="35" y2="40">
-                <stop stop-color="#F472B6" />
-                <stop offset="1" stop-color="#E11D48" />
-              </linearGradient>
-            </defs>
-          </svg>
-        </a>
+        <a href="index.html" class="auth-logo"><img src="assets/logo.png?v=3" alt="Rakshana 24/7" style="height: 100px; width: auto; display: block; filter: drop-shadow(0 0 10px rgba(255,255,255,0.5));"></a>
         <h1 class="auth-title" id="authTitle">Welcome Back</h1>
         <p class="auth-subtitle" id="authSubtitle">Sign in to access your digital dashboard.</p>
       </div>

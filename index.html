@@ -14,7 +14,7 @@
   <link rel="manifest" href="manifest.json">
 
   <!-- Favicon (inline SVG shield) -->
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🛡️</text></svg>">
+  <link rel="icon" type="image/png" href="frontend/assets/logo.png?v=3">
 
   <!-- Stylesheet -->
   <link rel="stylesheet" href="styles.css?v=30">
@@ -32,21 +32,7 @@
   <!-- ========== NAVIGATION ========== -->
   <nav class="navbar" id="navbar">
     <div class="container">
-      <a href="#" class="nav-brand" id="navBrand">
-        <span class="brand-icon">
-          <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M20 3L35 10V20C35 29.4 28.4 38 20 40C11.6 38 5 29.4 5 20V10L20 3Z" fill="url(#shield-grad)" stroke="none"/>
-            <path d="M16 20L19 23L25 17" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
-            <defs>
-              <linearGradient id="shield-grad" x1="5" y1="3" x2="35" y2="40" gradientUnits="userSpaceOnUse">
-                <stop stop-color="#7B2BE0"/>
-                <stop offset="1" stop-color="#FF6B9D"/>
-              </linearGradient>
-            </defs>
-          </svg>
-        </span>
-        <span>Rakshana 24/7 <span class="brand-telugu">రక్షణ</span></span>
-      </a>
+      <a href="#" class="nav-brand" id="navBrand"><img src="frontend/assets/logo.png?v=3" alt="Rakshana 24/7" style="height: 60px; width: auto; display: block; filter: drop-shadow(0 0 10px rgba(255,255,255,0.5));"></a>
 
       <div class="nav-links" id="navLinks">
         <a href="frontend/index.html" data-i18n="nav.home">Home</a>

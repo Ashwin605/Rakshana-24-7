@@ -13,8 +13,7 @@
   <title>Rakshana 24/7 — How It Works</title>
 
   <link rel="manifest" href="manifest.json">
-  <link rel="icon"
-    href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🛡️</text></svg>">
+  <link rel="icon" type="image/png" href="assets/logo.png?v=3">
 
   <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -38,18 +37,7 @@
   <!-- Page Loader -->
   <div class="page-loader" id="pageLoader">
     <div class="loader-content">
-      <div class="loader-shield">
-        <svg viewBox="0 0 60 60" fill="none">
-          <path d="M30 5L50 14V28C50 40.6 41.2 52 30 55C18.8 52 10 40.6 10 28V14L30 5Z" fill="url(#lg)" opacity="0.9" />
-          <path d="M24 30L28 34L37 25" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
-          <defs>
-            <linearGradient id="lg" x1="10" y1="5" x2="50" y2="55">
-              <stop stop-color="#F472B6" />
-              <stop offset="1" stop-color="#E11D48" />
-            </linearGradient>
-          </defs>
-        </svg>
-      </div>
+      <div class="loader-shield" style="width: 150px; height: auto; margin-bottom: 20px;"><img src="assets/logo.png?v=4" alt="Shield Logo" style="width: 100%; height: auto;"></div>
       <p class="loader-text">Initializing Shield…</p>
     </div>
   </div>
@@ -57,23 +45,7 @@
   <!-- ========== NAVIGATION ========== -->
   <nav class="navbar" id="navbar">
     <div class="container">
-      <a href="index.html" class="nav-brand" id="navBrand">
-        <span class="brand-icon">
-          <svg viewBox="0 0 40 40" fill="none">
-            <path d="M20 3L35 10V20C35 29.4 28.4 38 20 40C11.6 38 5 29.4 5 20V10L20 3Z" fill="url(#shield-grad)"
-              stroke="none" />
-            <path d="M16 20L19 23L25 17" stroke="white" stroke-width="2.5" stroke-linecap="round"
-              stroke-linejoin="round" />
-            <defs>
-              <linearGradient id="shield-grad" x1="5" y1="3" x2="35" y2="40">
-                <stop stop-color="#F472B6" />
-                <stop offset="1" stop-color="#E11D48" />
-              </linearGradient>
-            </defs>
-          </svg>
-        </span>
-        <span>Rakshana 24/7 <span class="brand-telugu">రక్షణ</span></span>
-      </a>
+      <a href="index.html" class="nav-brand" id="navBrand"><img src="assets/logo.png?v=3" alt="Rakshana 24/7" style="height: 85px; width: auto; display: block; filter: drop-shadow(0 0 10px rgba(255,255,255,0.5));"></a>
 
       
       <div class="nav-links" id="navLinks">
@@ -82,6 +54,12 @@
         <a href="legal.html" data-i18n="nav.legalRights">Legal Rights</a>
         <a href="scan.html" data-i18n="nav.scan">Scan</a>
         <a href="report.html" data-i18n="nav.report">Report</a>
+        
+        <!-- Mobile CTAs -->
+        <div class="mobile-nav-cta">
+          <button class="btn btn-ghost" onclick="window.location.href='auth.html'" data-i18n="nav.signIn">Sign In</button>
+          <button class="btn btn-primary" onclick="window.location.href='dashboard.html'" data-i18n="nav.myDashboard">My Dashboard</button>
+        </div>
       </div>
 
       <div class="nav-cta" id="navCta">

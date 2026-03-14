@@ -5,16 +5,15 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description"
-    content="Rakshana 24/7 — Proactive digital safety and cyber-hygiene platform for women. AI-powered threat detection, legal reference, and anonymous reporting.">
+    content="Rakshana 24/7 â Proactive digital safety and cyber-hygiene platform for women. AI-powered threat detection, legal reference, and anonymous reporting.">
   <meta name="theme-color" content="#F472B6">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 
-  <title>Rakshana 24/7 — Threat Scanner</title>
+  <title>Rakshana 24/7 â Threat Scanner</title>
 
   <link rel="manifest" href="manifest.json">
-  <link rel="icon"
-    href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🛡️</text></svg>">
+  <link rel="icon" type="image/png" href="assets/logo.png?v=3">
 
   <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -38,42 +37,15 @@
   <!-- Page Loader -->
   <div class="page-loader" id="pageLoader">
     <div class="loader-content">
-      <div class="loader-shield">
-        <svg viewBox="0 0 60 60" fill="none">
-          <path d="M30 5L50 14V28C50 40.6 41.2 52 30 55C18.8 52 10 40.6 10 28V14L30 5Z" fill="url(#lg)" opacity="0.9" />
-          <path d="M24 30L28 34L37 25" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
-          <defs>
-            <linearGradient id="lg" x1="10" y1="5" x2="50" y2="55">
-              <stop stop-color="#F472B6" />
-              <stop offset="1" stop-color="#E11D48" />
-            </linearGradient>
-          </defs>
-        </svg>
-      </div>
-      <p class="loader-text">Initializing Shield…</p>
+      <div class="loader-shield" style="width: 150px; height: auto; margin-bottom: 20px;"><img src="assets/logo.png?v=4" alt="Shield Logo" style="width: 100%; height: auto;"></div>
+      <p class="loader-text">Initializing Shieldâ¦</p>
     </div>
   </div>
 
   <!-- ========== NAVIGATION ========== -->
   <nav class="navbar" id="navbar">
     <div class="container">
-      <a href="index.html" class="nav-brand" id="navBrand">
-        <span class="brand-icon">
-          <svg viewBox="0 0 40 40" fill="none">
-            <path d="M20 3L35 10V20C35 29.4 28.4 38 20 40C11.6 38 5 29.4 5 20V10L20 3Z" fill="url(#shield-grad)"
-              stroke="none" />
-            <path d="M16 20L19 23L25 17" stroke="white" stroke-width="2.5" stroke-linecap="round"
-              stroke-linejoin="round" />
-            <defs>
-              <linearGradient id="shield-grad" x1="5" y1="3" x2="35" y2="40">
-                <stop stop-color="#F472B6" />
-                <stop offset="1" stop-color="#E11D48" />
-              </linearGradient>
-            </defs>
-          </svg>
-        </span>
-        <span>Rakshana 24/7 <span class="brand-telugu">రక్షణ</span></span>
-      </a>
+      <a href="index.html" class="nav-brand" id="navBrand"><img src="assets/logo.png?v=3" alt="Rakshana 24/7" style="height: 85px; width: auto; display: block; filter: drop-shadow(0 0 10px rgba(255,255,255,0.5));"></a>
 
       
       <div class="nav-links" id="navLinks">
@@ -82,6 +54,12 @@
         <a href="legal.html" data-i18n="nav.legalRights">Legal Rights</a>
         <a href="scan.html" data-i18n="nav.scan">Scan</a>
         <a href="report.html" data-i18n="nav.report">Report</a>
+        
+        <!-- Mobile CTAs -->
+        <div class="mobile-nav-cta">
+          <button class="btn btn-ghost" onclick="window.location.href='auth.html'" data-i18n="nav.signIn">Sign In</button>
+          <button class="btn btn-primary" onclick="window.location.href='dashboard.html'" data-i18n="nav.myDashboard">My Dashboard</button>
+        </div>
       </div>
 
       <div class="nav-cta" id="navCta">
@@ -115,7 +93,7 @@
             </div>
             <div class="mini-notif-body" id="miniNotifList">
                <div class="empty-state">
-                 <div class="empty-state-icon">🛡️</div>
+                 <div class="empty-state-icon">ð¡ï¸</div>
                  <p>Checking for threats...</p>
                </div>
             </div>
@@ -139,7 +117,7 @@
   <!-- ========== WARNING ALERT BANNER ========== -->
   <div class="warning-banner" id="warningBanner" style="display:none">
     <div class="container warning-banner-inner">
-      <div class="warning-icon">⚠️</div>
+      <div class="warning-icon">â ï¸</div>
       <div class="warning-content">
         <strong id="warningTitle">Threat Detected</strong>
         <p id="warningMessage">A potential threat has been identified. Review below for details.</p>
@@ -150,16 +128,16 @@
 
   <!-- ========== PUSH NOTIFICATION PROMPT ========== -->
   <div class="notification-prompt glass-card" id="notifPrompt" style="display:none">
-    <div class="notif-prompt-icon">🔔</div>
+    <div class="notif-prompt-icon">ð</div>
     <div class="notif-prompt-content">
       <strong>Enable Push Notifications</strong>
-      <p>Get instant alerts when threats are detected — even when this tab is closed.</p>
+      <p>Get instant alerts when threats are detected â even when this tab is closed.</p>
     </div>
     <button class="btn btn-sm btn-accent" onclick="enableNotifications()">Enable</button>
     <button class="btn btn-sm btn-ghost" onclick="dismissNotifPrompt()">Later</button>
   </div>
 
-  <!-- ========== THREAT SCANNER — Upload & Analyze ========== -->
+  <!-- ========== THREAT SCANNER â Upload & Analyze ========== -->
   <section class="scanner-section" id="scanner" style="padding-top: var(--space-24)">
     <div class="container">
       <div class="section-header reveal">
@@ -179,28 +157,28 @@
             </div>
             <div class="scan-sources" style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
               <div class="scan-source active-source">
-                <span class="source-icon">📡</span>
+                <span class="source-icon">ð¡</span>
                 <div class="source-info">
                   <span class="source-name" style="font-weight:600; font-size:var(--font-sm);">Telegram</span>
                   <span class="source-status available" style="font-size:var(--font-xs); color:var(--text-muted);">Connected</span>
                 </div>
               </div>
               <div class="scan-source active-source">
-                <span class="source-icon">🧠</span>
+                <span class="source-icon">ð§ </span>
                 <div class="source-info">
                   <span class="source-name" style="font-weight:600; font-size:var(--font-sm);">NLP Engine</span>
                   <span class="source-status available" style="font-size:var(--font-xs); color:var(--text-muted);">Connected</span>
                 </div>
               </div>
               <div class="scan-source active-source">
-                <span class="source-icon">📋</span>
+                <span class="source-icon">ð</span>
                 <div class="source-info">
                   <span class="source-name" style="font-weight:600; font-size:var(--font-sm);">Paste Sites</span>
                   <span class="source-status available" style="font-size:var(--font-xs); color:var(--text-muted);">Connected</span>
                 </div>
               </div>
               <div class="scan-source active-source" style="opacity: 0.7;">
-                <span class="source-icon">🔍</span>
+                <span class="source-icon">ð</span>
                 <div class="source-info">
                   <span class="source-name" style="font-weight:600; font-size:var(--font-sm);">Deep Image Trace</span>
                   <span class="source-status upcoming" style="font-size:var(--font-xs); color:var(--amber);">Beta API</span>
@@ -224,10 +202,10 @@
               <input type="file" id="fileInput" accept=".txt,.png,.jpg,.jpeg,.pdf,.csv,.html" style="display:none">
             </div>
             <div class="upload-file-info" id="fileInfo" style="display:none">
-              <span class="file-icon">📄</span>
+              <span class="file-icon">ð</span>
               <span class="file-name" id="fileName"></span>
               <span class="file-size" id="fileSize"></span>
-              <button class="btn btn-sm btn-ghost" onclick="clearFile()">✕</button>
+              <button class="btn btn-sm btn-ghost" onclick="clearFile()">â</button>
             </div>
 
             <div class="upload-divider"><span>or paste text directly</span></div>
@@ -236,7 +214,7 @@
               placeholder="Paste suspicious message, chat text, or any content you want analyzed..."></textarea>
 
             <button class="btn btn-accent btn-lg glow-btn" style="width:100%" onclick="runThreatScan()" id="btnRunScan">
-              🚀 Execute Deep Scan
+              ð Execute Deep Scan
             </button>
           </div>
         </div>
@@ -253,7 +231,7 @@
           </div>
 
           <div class="scan-placeholder" id="scanPlaceholder" style="flex:1;">
-            <div class="scan-placeholder-icon" style="font-size:3rem; margin-bottom:var(--space-4);">🛡️</div>
+            <div class="scan-placeholder-icon" style="font-size:3rem; margin-bottom:var(--space-4);">ð¡ï¸</div>
             <h3 style="font-size:var(--font-lg); font-weight:700;">Engine Standby</h3>
             <p style="color:var(--text-secondary); max-width:320px; margin:0 auto;">Input data on the left to initialize threat analysis trace. Results will output below.</p>
           </div>
@@ -288,13 +266,13 @@
 
             <!-- Applicable Laws -->
             <div class="scan-laws" id="scanLaws" style="display:none">
-              <h4>⚖️ Applicable Laws</h4>
+              <h4>âï¸ Applicable Laws</h4>
               <div class="scan-laws-list" id="scanLawsList"></div>
             </div>
 
             <!-- Recommended Actions -->
             <div class="scan-actions" id="scanActions" style="display:none">
-              <h4>📋 Recommended Actions</h4>
+              <h4>ð Recommended Actions</h4>
               <div class="scan-actions-list" id="scanActionsList"></div>
             </div>
           </div>
@@ -307,12 +285,12 @@
   <footer class="footer" id="footer">
     <div class="container">
       <div class="footer-content">
-        <p class="footer-brand" data-i18n="footer.brand" data-i18n-html="true"><strong>Rakshana 24/7</strong> � Proactive Digital Safety for Women</p>
+        <p class="footer-brand" data-i18n="footer.brand" data-i18n-html="true"><strong>Rakshana 24/7</strong>  Proactive Digital Safety for Women</p>
         <div class="footer-links">
           <a href="legal.html" data-i18n="footer.legalRights">Legal Rights</a>
-          <span>�</span>
+          <span>·</span>
           <a href="index.html#resources" data-i18n="footer.resources">Resources</a>
-          <span>�</span>
+          <span>·</span>
           <a href="report.html" data-i18n="footer.reportAnonymously">Report Anonymously</a>
         </div>
         <p class="footer-tagline" data-i18n="footer.tagline">"Light that travels ahead of the harm."</p>

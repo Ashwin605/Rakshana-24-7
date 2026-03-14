@@ -2657,3 +2657,201 @@ body.sos-active::after {
   opacity: 1;
   transform: translateX(0);
 }
+
+/* ============================================
+   RESPONSIVE SYSTEM (Comprehensive)
+   ============================================ */
+
+.mobile-nav-cta { display: none; }
+
+/* ── Large Tablet & Low Res Desktop (1024px) ── */
+@media (max-width: 1024px) {
+  :root {
+    --font-6xl: 3rem;
+    --font-5xl: 2.5rem;
+    --font-4xl: 2rem;
+  }
+  
+  .container { padding: 0 var(--space-8); }
+  
+  .hero-title { font-size: var(--font-4xl); }
+}
+
+/* ── Tablets & iPad (991px) ── */
+@media (max-width: 991px) {
+  .hero .container {
+    grid-template-columns: 1fr;
+    text-align: center;
+    gap: var(--space-12);
+  }
+  
+  .hero-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    max-width: 100%;
+  }
+  
+  .hero-description {
+    margin: 0 auto var(--space-8);
+  }
+  
+  .hero-actions { justify-content: center; }
+  
+  .hero-visual {
+    order: -1;
+    min-height: 350px;
+  }
+  
+  .shield-3d { transform: scale(0.9); }
+  
+  .gaps-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  /* Hide Crowded Buttons in Header */
+  #btnSignIn, #btnGetProtected { display: none; }
+}
+
+/* ── Mobile Menu & Navigation (768px) ── */
+@media (max-width: 768px) {
+  .mobile-menu-toggle { display: flex; z-index: 1001; }
+  
+  .nav-links {
+    position: fixed;
+    top: 0; right: 0;
+    width: 280px;
+    height: 100vh;
+    background: white; /* More opaque */
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    flex-direction: column;
+    padding: 80px var(--space-6) var(--space-10);
+    box-shadow: -10px 0 30px rgba(0,0,0,0.1);
+    transform: translateX(100%);
+    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 1000;
+    overflow-y: auto;
+    display: flex !important; /* Force flex for layout */
+  }
+  
+  .nav-links.open { transform: translateX(0); }
+  
+  .nav-links a {
+    font-size: var(--font-base);
+    padding: var(--space-4) 0;
+    width: 100%;
+    border-bottom: 1px solid var(--border);
+    border-radius: 0;
+    color: var(--text-primary);
+  }
+  
+  .mobile-nav-cta {
+    display: flex !important;
+    flex-direction: column;
+    gap: var(--space-4);
+    margin-top: var(--space-6);
+    padding-top: var(--space-6);
+    width: 100%;
+  }
+  
+  .mobile-nav-cta .btn {
+    width: 100%;
+    justify-content: center;
+    padding: var(--space-4) !important;
+    font-size: var(--font-base);
+    border-radius: var(--radius-md);
+  }
+
+  .nav-links a.active::after {
+    left: 0; transform: none; width: 4px; height: 60%;
+    top: 50%; transform: translateY(-50%);
+    bottom: auto;
+  }
+
+  .nav-cta {
+    margin-right: var(--space-12);
+  }
+
+  /* Adjust hero for mobile */
+  .hero { padding-top: 120px; padding-bottom: 120px; }
+  .hero-stats {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: var(--space-6);
+    margin-top: var(--space-10);
+  }
+  .hero-stat { flex: 1; min-width: 120px; }
+  
+  .features { padding-bottom: 140px; } /* Extra room for floating elements */
+  
+  .features-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .section-title { font-size: var(--font-3xl); }
+
+  /* Floating Buttons overlap fix */
+  .va-trigger {
+    bottom: 20px !important;
+    right: 70px !important;
+    width: 50px !important;
+    height: 50px !important;
+  }
+  .sos-toggle-btn {
+    bottom: 20px !important;
+    right: 15px !important;
+    width: 50px !important;
+    height: 50px !important;
+  }
+}
+
+/* ── Small Devices (640px) ── */
+@media (max-width: 640px) {
+  .nav-brand img { height: 55px !important; }
+  
+  .gaps-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .hero-actions {
+    flex-direction: column;
+    width: 100%;
+  }
+  .hero-actions .btn { width: 100%; justify-content: center; }
+  
+  .footer-links { gap: var(--space-4); }
+  .footer-links span { display: none; }
+  
+  .mini-notif-window {
+    width: calc(100vw - 32px);
+    right: -70px;
+    top: 80px;
+  }
+  
+  .btn-xl { padding: var(--space-3) var(--space-6); font-size: var(--font-base); }
+}
+
+/* ── Ultra Small (380px) ── */
+@media (max-width: 380px) {
+  :root {
+    --font-3xl: 1.5rem;
+    --font-2xl: 1.25rem;
+  }
+  
+  .hero-title { font-size: 1.75rem; }
+  .hero-stat-num { font-size: var(--font-xl); }
+}
+
+/* Ensure images and videos are responsive */
+canvas#particleCanvas { width: 100vw !important; height: 100vh !important; }
+
+/* ── Safe Area Insets for Modern Mobiles ── */
+@supports (padding: env(safe-area-inset-bottom)) {
+  .footer {
+    padding-bottom: calc(var(--space-8) + env(safe-area-inset-bottom));
+  }
+  .sos-toggle-btn {
+    bottom: calc(20px + env(safe-area-inset-bottom)) !important;
+  }
+}
