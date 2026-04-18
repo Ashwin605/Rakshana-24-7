@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="description" content="Rakshana 24/7 — Emergency SOS. Instantly alert trusted contacts, call emergency services, and share your live location.">
+  <meta name="theme-color" content="#DC2626">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+  <title>Rakshana 24/7 — Emergency SOS</title>
+
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" type="image/png" href="assets/logo.png?v=3">
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Noto+Sans+Telugu:wght@400;600;700&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="styles.css?v=30">
+  <link rel="stylesheet" href="sos.css?v=1">
+  <link rel="stylesheet" href="voice-assistant.css?v=1">
+</head>
+
+<body class="sos-page-body">
+
+  <!-- Particle Canvas Background -->
+  <canvas id="particleCanvas"></canvas>
+
+  <!-- ========== EMERGENCY SOS OVERLAY (Shake/Countdown) ========== -->
+  <div class="sos-overlay" id="sosOverlay">
+    <div class="sos-shield-container">
+      <div class="sos-pulse-ring"></div>
+      <div class="sos-pulse-ring" style="animation-delay: 0.5s"></div>
+      <div class="sos-pulse-ring" style="animation-delay: 1s"></div>
+      <div class="sos-shield-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M12 2L20 7V12C20 18 15 21 12 22C9 21 4 18 4 12V7L12 2Z" />
+          <path d="M12 8V12" />
+          <path d="M12 16H12.01" />
+        </svg>
+      </div>
+    </div>
+    <div class="sos-timer" id="sosTimer">5</div>
+    <h2 class="sos-title">Emergency SOS Triggered</h2>
+    <p class="sos-subtitle">Broadcasting your location and alert to emergency contacts in 5 seconds.</p>
+    <button class="btn-sos-cancel" onclick="cancelSOS()">CANCEL (I am safe)</button>
+  </div>
+
+  <!-- ========== FAKE CALL OVERLAY ========== -->
+  <div class="fake-call-overlay" id="fakeCallOverlay">
+    <div class="fake-call-screen">
+      <div class="fake-call-bg-blur"></div>
+      <div class="fake-call-content">
+        <div class="fake-call-avatar">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+            <circle cx="12" cy="7" r="4"></circle>
+          </svg>
+        </div>
+        <p class="fake-call-label" id="fakeCallLabel">Incoming Call</p>
+        <h2 class="fake-call-name" id="fakeCallName">Mom</h2>
+        <p class="fake-call-number" id="fakeCallNumber">Mobile</p>
+
+        <div class="fake-call-actions">
+          <button class="fake-call-btn decline" id="fakeCallDecline" onclick="endFakeCall()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z" transform="rotate(135 12 12)"/>
+            </svg>
+            <span>Decline</span>
+          </button>
+          <button class="fake-call-btn accept" id="fakeCallAccept" onclick="acceptFakeCall()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/>
+            </svg>
+            <span>Accept</span>
+          </button>
+        </div>
+      </div>
+      <!-- In-call state (hidden by default) -->
+      <div class="fake-call-incall" id="fakeCallInCall" style="display:none;">
+        <div class="fake-call-avatar small">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+            <circle cx="12" cy="7" r="4"></circle>
+          </svg>
+        </div>
+        <h3 id="fakeCallInCallName">Mom</h3>
+        <p class="fake-call-timer" id="fakeCallTimer">00:00</p>
+        <div class="fake-call-controls">
+          <button class="call-control-btn" onclick="toggleFakeCallMute()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/></svg>
+            <span>Mute</span>
+          </button>
+          <button class="call-control-btn" onclick="toggleFakeCallSpeaker()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
+            <span>Speaker</span>
+          </button>
+          <button class="call-control-btn end-call" onclick="endFakeCall()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z" transform="rotate(135 12 12)"/>
+            </svg>
+            <span>End</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== SOS TOP BAR ========== -->
+  <header class="sos-topbar" id="sosTopbar">
+    <div class="sos-topbar-inner">
+      <button class="sos-back-btn" onclick="window.location.href='index.html'" aria-label="Go back">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+      </button>
+      <div class="sos-topbar-shield">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M12 2L20 7V12C20 18 15 21 12 22C9 21 4 18 4 12V7L12 2Z"/>
+        </svg>
+      </div>
+      <h1 class="sos-topbar-title">Emergency SOS</h1>
+      <div class="sos-topbar-status">
+        <span class="sos-status-dot"></span>
+        <span class="sos-status-text" id="sosStatusText">Protected</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- ========== MAIN SOS CONTENT ========== -->
+  <main class="sos-main" id="sosMain">
+
+    <!-- SOS Hero Card -->
+    <section class="sos-hero-card" id="sosHeroCard">
+      <div class="sos-hero-pulse"></div>
+      <div class="sos-hero-pulse delay-1"></div>
+      <div class="sos-hero-pulse delay-2"></div>
+      <div class="sos-hero-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/>
+        </svg>
+      </div>
+      <h2 class="sos-hero-title">Emergency SOS</h2>
+      <p class="sos-hero-desc">Send your live location and an emergency message to all your trusted contacts instantly.</p>
+    </section>
+
+    <!-- Emergency Message -->
+    <section class="sos-section" id="sosMessageSection">
+      <h3 class="sos-section-title">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        Emergency Message
+      </h3>
+      <textarea class="sos-textarea" id="sosMessage" placeholder="I need help immediately. Please check on me." rows="3">I need help immediately. Please check on me.</textarea>
+      <div class="sos-msg-templates">
+        <button class="sos-template-chip" onclick="setSOSMessage('I need help immediately. Please check on me.')">Default</button>
+        <button class="sos-template-chip" onclick="setSOSMessage('I am in danger. Please call the police and share my location.')">Danger</button>
+        <button class="sos-template-chip" onclick="setSOSMessage('I feel unsafe. Please track my location and call me.')">Unsafe</button>
+        <button class="sos-template-chip" onclick="setSOSMessage('Medical emergency! Please send help to my location immediately.')">Medical</button>
+      </div>
+    </section>
+
+    <!-- Live Location -->
+    <section class="sos-section" id="sosLocationSection">
+      <div class="sos-location-card">
+        <div class="sos-location-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 2v4M12 18v4M2 12h4M18 12h4"/><circle cx="12" cy="12" r="10"/></svg>
+        </div>
+        <div class="sos-location-info">
+          <h4>Live Location</h4>
+          <p class="sos-location-desc">Your location will be shared with your trusted contacts when you send SOS</p>
+          <div class="sos-location-status" id="sosLocationStatus">
+            <span class="sos-loc-dot detecting"></span>
+            <span id="sosLocationText">Detecting location...</span>
+          </div>
+        </div>
+        <button class="sos-location-refresh" onclick="refreshLocation()" aria-label="Refresh location">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
+        </button>
+      </div>
+      <!-- Mini Map -->
+      <div class="sos-minimap" id="sosMinimap">
+        <div class="sos-minimap-placeholder" id="sosMinimapPlaceholder">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          <span>Map loading...</span>
+        </div>
+        <div class="sos-minimap-pin" id="sosMinimapPin" style="display:none;">
+          <div class="sos-pin-pulse"></div>
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3" fill="white"/></svg>
+        </div>
+      </div>
+    </section>
+
+    <!-- SEND SOS BUTTON -->
+    <section class="sos-send-section">
+      <button class="sos-send-btn" id="sosSendBtn" onclick="sendSOS()">
+        <div class="sos-send-pulse"></div>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/>
+        </svg>
+        <span>SEND SOS TO ALL CONTACTS</span>
+      </button>
+      <p class="sos-send-note">This will share your location and message with all trusted contacts</p>
+    </section>
+
+    <!-- SOS Sent Success (hidden by default) -->
+    <section class="sos-sent-card" id="sosSentCard" style="display:none;">
+      <div class="sos-sent-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+      </div>
+      <h3>SOS Broadcast Sent!</h3>
+      <p>Your emergency message and live location have been sent to all trusted contacts.</p>
+      <div class="sos-sent-details" id="sosSentDetails"></div>
+      <button class="btn btn-outline" onclick="resetSOS()" style="margin-top: 16px;">Send Another SOS</button>
+    </section>
+
+    <!-- ═══ SAFETY TOOLS ═══ -->
+    <section class="sos-section">
+      <h3 class="sos-section-label">SAFETY TOOLS</h3>
+
+      <!-- Fake Incoming Call -->
+      <div class="sos-tool-card" id="fakeCallCard">
+        <div class="sos-tool-icon fake-call-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/>
+          </svg>
+        </div>
+        <div class="sos-tool-info">
+          <h4>Fake Incoming Call</h4>
+          <p>Simulate a phone call to safely exit a situation</p>
+        </div>
+        <div class="sos-tool-actions">
+          <select class="sos-fake-call-delay" id="fakeCallDelay">
+            <option value="0">Now</option>
+            <option value="10">10s</option>
+            <option value="30" selected>30s</option>
+            <option value="60">1 min</option>
+            <option value="180">3 min</option>
+          </select>
+          <button class="sos-tool-btn activate" id="fakeCallActivateBtn" onclick="activateFakeCall()">Activate</button>
+        </div>
+      </div>
+
+      <!-- Shake-to-SOS -->
+      <div class="sos-tool-card" id="shakeSOSCard">
+        <div class="sos-tool-icon shake-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12.01" y2="18"/>
+          </svg>
+        </div>
+        <div class="sos-tool-info">
+          <h4>Shake-to-SOS</h4>
+          <p>Shake your phone 3 times to auto-trigger SOS</p>
+        </div>
+        <div class="sos-tool-actions">
+          <button class="sos-tool-btn toggle-btn active" id="shakeToggleBtn" onclick="toggleShakeSOS()">
+            <span class="toggle-track"><span class="toggle-thumb"></span></span>
+            <span class="toggle-label" id="shakeToggleLabel">Active</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Siren Alarm -->
+      <div class="sos-tool-card" id="sirenCard">
+        <div class="sos-tool-icon siren-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/>
+          </svg>
+        </div>
+        <div class="sos-tool-info">
+          <h4>Panic Siren</h4>
+          <p>Loud alarm to attract attention and deter attackers</p>
+        </div>
+        <div class="sos-tool-actions">
+          <button class="sos-tool-btn siren-btn" id="sirenBtn" onclick="toggleSiren()">Activate</button>
+        </div>
+      </div>
+
+      <!-- Screen Record Evidence -->
+      <div class="sos-tool-card" id="evidenceCard">
+        <div class="sos-tool-icon evidence-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="3" fill="currentColor"/>
+          </svg>
+        </div>
+        <div class="sos-tool-info">
+          <h4>Record Evidence</h4>
+          <p>Auto-record audio for 60 seconds as evidence</p>
+        </div>
+        <div class="sos-tool-actions">
+          <button class="sos-tool-btn record-btn" id="recordBtn" onclick="toggleRecording()">Record</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══ QUICK EMERGENCY CALLS ═══ -->
+    <section class="sos-section">
+      <h3 class="sos-section-label">QUICK EMERGENCY CALLS</h3>
+      <div class="sos-emergency-list" id="sosEmergencyList">
+        
+        <a href="tel:112" class="sos-emergency-item priority">
+          <div class="sos-emergency-icon" style="background: linear-gradient(135deg, #DC2626, #B91C1C);">
+            <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+          </div>
+          <div class="sos-emergency-info">
+            <strong>112 — Emergency</strong>
+            <span>National Emergency Number (Police, Fire, Ambulance)</span>
+          </div>
+          <span class="sos-call-badge">Call</span>
+        </a>
+
+        <a href="tel:181" class="sos-emergency-item">
+          <div class="sos-emergency-icon" style="background: linear-gradient(135deg, #EC4899, #DB2777);">
+            <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          </div>
+          <div class="sos-emergency-info">
+            <strong>181 — Women Helpline</strong>
+            <span>National Commission for Women 24/7</span>
+          </div>
+          <span class="sos-call-badge">Call</span>
+        </a>
+
+        <a href="tel:1930" class="sos-emergency-item">
+          <div class="sos-emergency-icon" style="background: linear-gradient(135deg, #8B5CF6, #7C3AED);">
+            <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+          </div>
+          <div class="sos-emergency-info">
+            <strong>1930 — Cyber Crime</strong>
+            <span>National Cyber Crime Reporting Portal</span>
+          </div>
+          <span class="sos-call-badge">Call</span>
+        </a>
+
+        <a href="tel:100" class="sos-emergency-item">
+          <div class="sos-emergency-icon" style="background: linear-gradient(135deg, #3B82F6, #2563EB);">
+            <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          </div>
+          <div class="sos-emergency-info">
+            <strong>100 — Police</strong>
+            <span>Direct line to nearest police station</span>
+          </div>
+          <span class="sos-call-badge">Call</span>
+        </a>
+
+        <a href="tel:1098" class="sos-emergency-item">
+          <div class="sos-emergency-icon" style="background: linear-gradient(135deg, #F59E0B, #D97706);">
+            <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          </div>
+          <div class="sos-emergency-info">
+            <strong>1098 — Childline</strong>
+            <span>Child in danger or distress — 24/7</span>
+          </div>
+          <span class="sos-call-badge">Call</span>
+        </a>
+
+        <a href="tel:1091" class="sos-emergency-item">
+          <div class="sos-emergency-icon" style="background: linear-gradient(135deg, #F472B6, #EC4899);">
+            <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          </div>
+          <div class="sos-emergency-info">
+            <strong>1091 — Women Police</strong>
+            <span>Police Women's Helpline</span>
+          </div>
+          <span class="sos-call-badge">Call</span>
+        </a>
+
+        <a href="tel:102" class="sos-emergency-item">
+          <div class="sos-emergency-icon" style="background: linear-gradient(135deg, #10B981, #059669);">
+            <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+          </div>
+          <div class="sos-emergency-info">
+            <strong>102 — Ambulance</strong>
+            <span>National Ambulance Service</span>
+          </div>
+          <span class="sos-call-badge">Call</span>
+        </a>
+
+        <a href="https://wa.me/917827170170" target="_blank" rel="noopener" class="sos-emergency-item">
+          <div class="sos-emergency-icon" style="background: linear-gradient(135deg, #22C55E, #16A34A);">
+            <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+          </div>
+          <div class="sos-emergency-info">
+            <strong>NCW WhatsApp</strong>
+            <span>7827-170-170 — National Commission for Women</span>
+          </div>
+          <span class="sos-call-badge">Chat</span>
+        </a>
+      </div>
+    </section>
+
+    <!-- ═══ MY TRUSTED CONTACTS ═══ -->
+    <section class="sos-section">
+      <h3 class="sos-section-label">MY TRUSTED CONTACTS</h3>
+      <div class="sos-contacts-list" id="sosContactsList">
+        <!-- Populated by JS -->
+      </div>
+      <button class="sos-add-contact-btn" id="addContactBtn" onclick="openAddContactModal()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        Add Trusted Contact
+      </button>
+    </section>
+
+    <!-- ═══ NEARBY POLICE STATIONS ═══ -->
+    <section class="sos-section">
+      <h3 class="sos-section-label">NEARBY POLICE STATIONS</h3>
+      <div class="sos-stations-list" id="sosStationsList">
+        <div class="sos-station-loading">
+          <div class="loader-spinner small"></div>
+          <p>Detecting location to find nearby stations...</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══ SAFETY TIPS ═══ -->
+    <section class="sos-section sos-tips-section">
+      <h3 class="sos-section-label">STAY SAFE — QUICK TIPS</h3>
+      <div class="sos-tips-grid">
+        <div class="sos-tip-card">
+          <div class="sos-tip-icon">📱</div>
+          <p>Keep your phone charged and accessible at all times</p>
+        </div>
+        <div class="sos-tip-card">
+          <div class="sos-tip-icon">📍</div>
+          <p>Share your live location with trusted contacts when traveling</p>
+        </div>
+        <div class="sos-tip-card">
+          <div class="sos-tip-icon">📸</div>
+          <p>Take screenshots of threats as evidence before they are deleted</p>
+        </div>
+        <div class="sos-tip-card">
+          <div class="sos-tip-icon">🚶‍♀️</div>
+          <p>Walk towards crowded, well-lit areas if you feel unsafe</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Bottom spacer for nav -->
+    <div style="height: 100px;"></div>
+  </main>
+
+  <!-- ========== ADD CONTACT MODAL ========== -->
+  <div class="sos-modal-backdrop" id="addContactModal" style="display:none;">
+    <div class="sos-modal">
+      <div class="sos-modal-header">
+        <h3>Add Trusted Contact</h3>
+        <button class="sos-modal-close" onclick="closeAddContactModal()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+      <div class="sos-modal-body">
+        <div class="sos-form-group">
+          <label for="contactName">Name</label>
+          <input type="text" id="contactName" placeholder="e.g., Mom, Dad, Friend" autocomplete="off">
+        </div>
+        <div class="sos-form-group">
+          <label for="contactPhone">Phone Number</label>
+          <input type="tel" id="contactPhone" placeholder="+91 XXXXX XXXXX" autocomplete="off">
+        </div>
+        <div class="sos-form-group">
+          <label for="contactRelation">Relationship</label>
+          <select id="contactRelation">
+            <option value="Family">Family</option>
+            <option value="Friend">Friend</option>
+            <option value="Partner">Partner</option>
+            <option value="Colleague">Colleague</option>
+            <option value="Neighbor">Neighbor</option>
+            <option value="Other">Other</option>
+          </select>
+        </div>
+      </div>
+      <div class="sos-modal-footer">
+        <button class="btn btn-ghost" onclick="closeAddContactModal()">Cancel</button>
+        <button class="btn btn-accent" onclick="saveContact()">Save Contact</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== BOTTOM NAVIGATION ========== -->
+  <nav class="sos-bottom-nav" id="sosBottomNav">
+    <a href="index.html" class="sos-nav-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+      <span>Home</span>
+    </a>
+    <a href="dashboard.html" class="sos-nav-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+      <span>Alerts</span>
+    </a>
+    <a href="sos.html" class="sos-nav-item active sos-nav-sos">
+      <div class="sos-nav-sos-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/>
+        </svg>
+      </div>
+      <span>SOS</span>
+    </a>
+    <a href="report.html" class="sos-nav-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+      <span>Report</span>
+    </a>
+    <a href="scan.html" class="sos-nav-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.3-4.3"/></svg>
+      <span>Scan</span>
+    </a>
+    <a href="auth.html" class="sos-nav-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      <span>Profile</span>
+    </a>
+  </nav>
+
+  <!-- Toast Container -->
+  <div id="toastContainer"></div>
+
+  <!-- Scripts -->
+  <script src="translations.js?v=40"></script>
+  <script src="api.js?v=40"></script>
+  <script src="app.js?v=40"></script>
+  <script src="sos.js?v=1"></script>
+  <script src="voice-assistant.js?v=1"></script>
+</body>
+</html>

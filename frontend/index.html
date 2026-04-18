@@ -65,7 +65,7 @@
   <!-- ========== NAVIGATION ========== -->
   <nav class="navbar" id="navbar">
     <div class="container">
-      <a href="index.html" class="nav-brand" id="navBrand"><img src="assets/logo.png?v=3" alt="Rakshana 24/7" style="height: 85px; width: auto; display: block; filter: drop-shadow(0 0 10px rgba(255,255,255,0.5));"></a>
+      <a href="index.html" class="nav-brand" id="navBrand"><img src="assets/logo.png?v=3" alt="Rakshana 24/7" style="height: 55px; width: auto; display: block; filter: drop-shadow(0 0 10px rgba(255,255,255,0.5));"></a>
 
       
       <div class="nav-links" id="navLinks">
@@ -74,6 +74,7 @@
         <a href="legal.html" data-i18n="nav.legalRights">Legal Rights</a>
         <a href="scan.html" data-i18n="nav.scan">Scan</a>
         <a href="report.html" data-i18n="nav.report">Report</a>
+        <a href="sos.html" style="color: #DC2626; font-weight: 700;">🚨 SOS</a>
         
         <!-- Mobile CTAs -->
         <div class="mobile-nav-cta">
@@ -227,6 +228,34 @@
         </div>
         <div class="floating-badge badge-left glass-card">
           <span class="dot dot-amber"></span>NLP Ready
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== QUICK ACCESS SECTION ========== -->
+  <section class="quick-access-section" id="quick-access">
+    <div class="container">
+      <div class="quick-access-grid">
+        <div class="qa-card sos reveal" onclick="window.location.href='sos.html'">
+          <div class="qa-icon">🚨</div>
+          <h3 data-i18n="qa.sos.title">Emergency SOS</h3>
+          <p data-i18n="qa.sos.desc">Instant alert & location sharing</p>
+        </div>
+        <div class="qa-card scan reveal" onclick="window.location.href='scan.html'">
+          <div class="qa-icon">🔍</div>
+          <h3 data-i18n="qa.scan.title">Threat Scan</h3>
+          <p data-i18n="qa.scan.desc">Check for digital threats</p>
+        </div>
+        <div class="qa-card report reveal" onclick="window.location.href='report.html'">
+          <div class="qa-icon">📝</div>
+          <h3 data-i18n="qa.report.title">Report Case</h3>
+          <p data-i18n="qa.report.desc">File anonymous report</p>
+        </div>
+        <div class="qa-card legal reveal" onclick="window.location.href='legal.html'">
+          <div class="qa-icon">⚖️</div>
+          <h3 data-i18n="qa.legal.title">Legal Rights</h3>
+          <p data-i18n="qa.legal.desc">Know your protections</p>
         </div>
       </div>
     </div>
@@ -423,8 +452,8 @@
   <div id="toastContainer"></div>
 
   <!-- Floating SOS SOS Toggle -->
-  <div class="sos-toggle-btn" id="sosToggleBtn">
-    <div class="sos-tooltip">24/7 Shield Active</div>
+  <div class="sos-toggle-btn" id="sosToggleBtn" onclick="window.location.href='sos.html'" style="cursor:pointer;">
+    <div class="sos-tooltip">Emergency SOS</div>
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
       <path d="M12 2L20 7V12C20 18 15 21 12 22C9 21 4 18 4 12V7L12 2Z" />
     </svg>

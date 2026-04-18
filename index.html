@@ -40,6 +40,7 @@
         <a href="frontend/legal.html" data-i18n="nav.legalRights">Legal Rights</a>
         <a href="frontend/scan.html" data-i18n="nav.scan">Scan</a>
         <a href="frontend/report.html" data-i18n="nav.report">Report</a>
+        <a href="frontend/sos.html" data-i18n="nav.sos" style="color: #DC2626; font-weight: 700;">🚨 SOS</a>
       </div>
 
       <div class="nav-cta" id="navCta">
@@ -76,9 +77,17 @@
         <p class="hero-quote" data-i18n="hero.quote">"I am scared, so I am protected."</p>
 
         <div class="hero-actions">
+          <button class="btn btn-sos btn-lg" onclick="window.location.href='frontend/sos.html'" style="background: #DC2626; color: white; border: none; box-shadow: 0 4px 15px rgba(220,38,38,0.4);">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 20px; height: 20px; margin-right: 8px; display: inline-block; vertical-align: middle;">
+              <path d="M12 2L20 7V12C20 18 15 21 12 22C9 21 4 18 4 12V7L12 2Z" />
+              <path d="M12 8V12" />
+              <path d="M12 16H12.01" />
+            </svg>
+            <span data-i18n="hero.emergencySos" style="vertical-align: middle;">Emergency SOS</span>
+          </button>
           <a href="#cta" class="btn btn-accent btn-lg" id="btnStartProtection">
-            <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 2L17 6V10C17 15 13.8 19 10 20C6.2 19 3 15 3 10V6L10 2Z"/></svg>
-            <span data-i18n="hero.startProtection">Start Protection</span>
+            <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" style="width: 20px; height: 20px; margin-right: 8px; display: inline-block; vertical-align: middle;"><path d="M10 2L17 6V10C17 15 13.8 19 10 20C6.2 19 3 15 3 10V6L10 2Z"/></svg>
+            <span data-i18n="hero.startProtection" style="vertical-align: middle;">Start Protection</span>
           </a>
           <a href="frontend/how-it-works.html" class="btn btn-outline btn-lg" id="btnSeeHow">
             <span data-i18n="hero.seeHowItWorks">See How It Works</span>
@@ -606,10 +615,12 @@
   </div>
 
   <!-- Floating SOS SOS Toggle -->
-  <div class="sos-toggle-btn" id="sosToggleBtn">
-    <div class="sos-tooltip">24/7 Shield Active</div>
+  <div class="sos-toggle-btn" id="sosToggleBtn" onclick="window.location.href='frontend/sos.html'" style="cursor:pointer; background: #DC2626; border-color: #DC2626;">
+    <div class="sos-tooltip">Emergency SOS</div>
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
       <path d="M12 2L20 7V12C20 18 15 21 12 22C9 21 4 18 4 12V7L12 2Z" />
+      <path d="M12 8V12" />
+      <path d="M12 16H12.01" />
     </svg>
   </div>
 
