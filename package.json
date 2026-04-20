@@ -3,6 +3,6 @@
     "dompurify": "^3.4.0"
   },
   "scripts": {
-    "start": "gunicorn --worker-class eventlet -w 1 -b :$PORT backend.run:app"
+    "start": "gunicorn --worker-class eventlet -w 1 -b :$PORT --chdir backend run:app"
   }
 }
