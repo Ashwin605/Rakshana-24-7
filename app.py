@@ -26,16 +26,16 @@ def main():
         return
 
     # 2. Start Frontend
-    print("[2] Starting Frontend Local Server (Port 8000)...")
+    print("[2] Starting Frontend Local Server (Port 80)...")
     try:
-        frontend_process = subprocess.Popen([python_exe, '-m', 'http.server', '8000'], cwd=frontend_dir)
+        frontend_process = subprocess.Popen([python_exe, '-m', 'http.server', '80'], cwd=frontend_dir)
     except Exception as e:
         print(f"Failed to start frontend: {e}")
         backend_process.terminate()
         return
     
     print("\n✓ Both servers are now running!")
-    print("→ Frontend accessible at: http://localhost:8000")
+    print("→ Frontend accessible at: http://localhost")
     print("→ Backend accessible at:  http://localhost:5000")
     print("\nPress Ctrl+C to stop both servers gracefully.")
     print("==============================================\n")
@@ -46,13 +46,13 @@ def main():
     # Automatically open the browser
     try:
         if sys.platform == 'win32':
-            os.startfile('http://localhost:8000')
+            os.startfile('http://localhost')
         elif sys.platform == 'darwin':
-            subprocess.Popen(['open', 'http://localhost:8000'])
+            subprocess.Popen(['open', 'http://localhost'])
         else:
-            subprocess.Popen(['xdg-open', 'http://localhost:8000'])
+            subprocess.Popen(['xdg-open', 'http://localhost'])
     except Exception:
-        print("Note: Could not open browser automatically. Please manually open http://localhost:8000")
+        print("Note: Could not open browser automatically. Please manually open http://localhost")
 
     # Keep script alive and monitor processes
     try:
