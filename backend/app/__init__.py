@@ -3,19 +3,25 @@
 # ============================================
 
 import os
+import logging
 
-from flask import Flask
+from flask import Flask, request
 from flask_cors import CORS
 from flask_jwt_extended import JWTManager
 from flask_socketio import SocketIO
 from flask_sqlalchemy import SQLAlchemy
+from flask_limiter import Limiter
+from flask_limiter.util import get_remote_address
 
 from config import config_by_name
+
+logger = logging.getLogger(__name__)
 
 # ─── Extensions (initialised once, bound to app in factory) ───
 db = SQLAlchemy()
 jwt = JWTManager()
-socketio = SocketIO(cors_allowed_origins="*", async_mode="threading")
+socketio = SocketIO(async_mode="threading")
+limiter = Limiter(key_func=get_remote_address)
 
 
 def create_app(config_name: str | None = None) -> Flask:
@@ -39,8 +45,43 @@ def create_app(config_name: str | None = None) -> Flask:
     # ── Initialise extensions ──
     db.init_app(app)
     jwt.init_app(app)
-    CORS(app, origins="*", supports_credentials=True)
-    socketio.init_app(app)
+    limiter.init_app(app)
+
+    # ── CORS: Restrict to configured origins only ──
+    CORS(
+        app,
+        origins=app.config.get("CORS_ORIGINS", ["http://localhost:3000"]),
+        supports_credentials=True,
+        allow_headers=["Content-Type", "Authorization"],
+        methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"]
+    )
+
+    # ── SocketIO CORS: Restrict to specific origins ──
+    socketio.init_app(
+        app,
+        cors_allowed_origins=app.config.get("CORS_ORIGINS", ["http://localhost:3000"]),
+        cors_credentials=True
+    )
+
+    # ── Security Headers Middleware ──
+    @app.after_request
+    def set_security_headers(response):
+        """Add security headers to every response."""
+        response.headers["X-Frame-Options"] = "DENY"
+        response.headers["X-Content-Type-Options"] = "nosniff"
+        response.headers["X-XSS-Protection"] = "1; mode=block"
+        response.headers["Referrer-Policy"] = "strict-origin-when-cross-origin"
+        response.headers["Permissions-Policy"] = "geolocation=(), microphone=(), camera=()"
+
+        # HSTS only in production
+        if not app.debug:
+            response.headers["Strict-Transport-Security"] = "max-age=31536000; includeSubDomains; preload"
+            response.headers["Content-Security-Policy"] = "default-src 'self'; script-src 'self' 'unsafe-inline' https://fonts.googleapis.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com"
+
+        return response
+
+    # ── Request size limit ──
+    app.config["MAX_CONTENT_LENGTH"] = 50 * 1024 * 1024  # 50MB
 
     # ── Serve frontend index.html at root ──
     @app.route("/")
@@ -77,14 +118,17 @@ def create_app(config_name: str | None = None) -> Flask:
     # ── JWT error handlers ──
     @jwt.expired_token_loader
     def expired_token_callback(jwt_header, jwt_payload):
+        logger.warning(f"Expired token accessed from {get_remote_address()}")
         return {"error": "Token has expired", "code": "TOKEN_EXPIRED"}, 401
 
     @jwt.invalid_token_loader
     def invalid_token_callback(error):
+        logger.warning(f"Invalid token from {get_remote_address()}: {error}")
         return {"error": "Invalid token", "code": "INVALID_TOKEN"}, 401
 
     @jwt.unauthorized_loader
     def missing_token_callback(error):
+        logger.warning(f"Missing token from {get_remote_address()}")
         return {"error": "Authorization required", "code": "AUTH_REQUIRED"}, 401
 
     return app

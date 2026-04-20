@@ -37,7 +37,8 @@
   <!-- Page Loader -->
   <div class="page-loader" id="pageLoader">
     <div class="loader-content">
-      <div class="loader-shield" style="width: 150px; height: auto; margin-bottom: 20px;"><img src="assets/logo.png?v=4" alt="Shield Logo" style="width: 100%; height: auto;"></div>
+      <div class="loader-shield" style="width: 150px; height: auto; margin-bottom: 20px;"><img src="assets/logo.png?v=4"
+          alt="Shield Logo" style="width: 100%; height: auto;"></div>
       <p class="loader-text">Initializing Shield…</p>
     </div>
   </div>
@@ -58,16 +59,18 @@
     </div>
     <div class="sos-timer" id="sosTimer">5</div>
     <h2 class="sos-title">Emergency SOS Triggered</h2>
-    <p class="sos-subtitle">Shaking detected. Broadcasting your location and alert to emergency contacts in 5 seconds.</p>
+    <p class="sos-subtitle">Shaking detected. Broadcasting your location and alert to emergency contacts in 5 seconds.
+    </p>
     <button class="btn-sos-cancel" onclick="cancelSOS()">CANCEL (I am safe)</button>
   </div>
 
   <!-- ========== NAVIGATION ========== -->
   <nav class="navbar" id="navbar">
     <div class="container">
-      <a href="index.html" class="nav-brand" id="navBrand"><img src="assets/logo.png?v=3" alt="Rakshana 24/7" style="height: 55px; width: auto; display: block; filter: drop-shadow(0 0 10px rgba(255,255,255,0.5));"></a>
+      <a href="index.html" class="nav-brand" id="navBrand"><img src="assets/logo.png?v=3" alt="Rakshana 24/7"
+          style="height: 55px; width: auto; display: block; filter: drop-shadow(0 0 10px rgba(255,255,255,0.5));"></a>
 
-      
+
       <div class="nav-links" id="navLinks">
         <a href="index.html" data-i18n="nav.home">Home</a>
         <a href="how-it-works.html" data-i18n="nav.howItWorks">How It Works</a>
@@ -75,11 +78,13 @@
         <a href="scan.html" data-i18n="nav.scan">Scan</a>
         <a href="report.html" data-i18n="nav.report">Report</a>
         <a href="sos.html" style="color: #DC2626; font-weight: 700;">🚨 SOS</a>
-        
+
         <!-- Mobile CTAs -->
         <div class="mobile-nav-cta">
-          <button class="btn btn-ghost" onclick="window.location.href='auth.html'" data-i18n="nav.signIn">Sign In</button>
-          <button class="btn btn-primary" onclick="window.location.href='dashboard.html'" data-i18n="nav.myDashboard">My Dashboard</button>
+          <button class="btn btn-ghost" onclick="window.location.href='auth.html'" data-i18n="nav.signIn">Sign
+            In</button>
+          <button class="btn btn-primary" onclick="window.location.href='dashboard.html'" data-i18n="nav.myDashboard">My
+            Dashboard</button>
         </div>
       </div>
 
@@ -92,7 +97,7 @@
             </svg>
             <span class="badge-dot pulse-dot" id="miniBadgeAlert">0</span>
           </button>
-          
+
           <div class="mini-notif-window glass-card" id="miniNotifWindow">
             <div class="mini-notif-header">
               <div class="mini-notif-title-row">
@@ -106,17 +111,20 @@
             </div>
             <div class="mini-notif-filters">
               <button class="filter-chip active" data-filter="all" onclick="filterMiniNotifs('all', event)">All</button>
-              <button class="filter-chip" data-filter="critical" onclick="filterMiniNotifs('critical', event)">Critical</button>
-              <button class="filter-chip" data-filter="alert" onclick="filterMiniNotifs('alert', event)">High Alert</button>
+              <button class="filter-chip" data-filter="critical"
+                onclick="filterMiniNotifs('critical', event)">Critical</button>
+              <button class="filter-chip" data-filter="alert" onclick="filterMiniNotifs('alert', event)">High
+                Alert</button>
               <button class="filter-chip" data-filter="watch" onclick="filterMiniNotifs('watch', event)">Watch</button>
               <button class="filter-chip" data-filter="safe" onclick="filterMiniNotifs('safe', event)">Safe</button>
-              <button class="filter-chip" data-filter="unread" onclick="filterMiniNotifs('unread', event)">Unread</button>
+              <button class="filter-chip" data-filter="unread"
+                onclick="filterMiniNotifs('unread', event)">Unread</button>
             </div>
             <div class="mini-notif-body" id="miniNotifList">
-               <div class="empty-state">
-                 <div class="empty-state-icon">🛡️</div>
-                 <p>Checking for threats...</p>
-               </div>
+              <div class="empty-state">
+                <div class="empty-state-icon">🛡️</div>
+                <p>Checking for threats...</p>
+              </div>
             </div>
             <div class="mini-notif-footer">
               <p>Watching for threats 24/7</p>
@@ -125,8 +133,10 @@
           </div>
         </div>
 
-        <button class="btn btn-ghost" id="btnSignIn" data-i18n="nav.signIn" onclick="window.location.href='auth.html'">Sign In</button>
-        <button class="btn btn-primary" id="btnGetProtected" data-i18n="nav.myDashboard" onclick="window.location.href='dashboard.html'">My Dashboard</button>
+        <button class="btn btn-ghost" id="btnSignIn" data-i18n="nav.signIn"
+          onclick="window.location.href='auth.html'">Sign In</button>
+        <button class="btn btn-primary" id="btnGetProtected" data-i18n="nav.myDashboard"
+          onclick="window.location.href='dashboard.html'">My Dashboard</button>
       </div>
 
       <button class="mobile-menu-toggle" id="mobileMenuToggle" aria-label="Toggle navigation menu">
@@ -171,7 +181,8 @@
 
         <h1 class="hero-title">
           <span data-i18n="hero.title.part1">She shouldn't have to</span>
-          <span class="highlight gradient-text" data-i18n="hero.title.highlight">wait</span> <span data-i18n="hero.title.part2">for the harm to find help.</span>
+          <span class="highlight gradient-text" data-i18n="hero.title.highlight">wait</span> <span
+            data-i18n="hero.title.part2">for the harm to find help.</span>
         </h1>
 
         <p class="hero-description" data-i18n="hero.desc" data-i18n-html="true">
@@ -203,7 +214,8 @@
           <div class="hero-stat"><span class="hero-stat-num" data-target="70" data-suffix="%+">0</span><span
               class="hero-stat-label" data-i18n="hero.stat.threats">threats from known contacts</span></div>
           <div class="hero-stat"><span class="hero-stat-num" data-target="5" data-prefix="<"
-              data-suffix="%">0</span><span class="hero-stat-label" data-i18n="hero.stat.crimes">crimes reported</span></div>
+              data-suffix="%">0</span><span class="hero-stat-label" data-i18n="hero.stat.crimes">crimes reported</span>
+          </div>
           <div class="hero-stat"><span class="hero-stat-num" data-target="0" data-exact="0">0</span><span
               class="hero-stat-label" data-i18n="hero.stat.tools">proactive tools exist</span></div>
         </div>
@@ -355,25 +367,34 @@
   </section>
 
   <!-- ========== FAQ SECTION — ADVANCED ACCORDION ========== -->
-  <section class="faq-section" id="faq" style="background: var(--bg-secondary); padding: var(--space-24) 0; position: relative;">
+  <section class="faq-section" id="faq"
+    style="background: var(--bg-secondary); padding: var(--space-24) 0; position: relative;">
     <div class="container">
       <div class="section-header reveal">
         <p class="section-label">FAQ</p>
-        <h2 class="section-title">Common Questions <span style="font-size: 12px; background: var(--primary); color: white; padding: 2px 8px; border-radius: 10px; vertical-align: middle;">v10.1 LIVE</span></h2>
+        <h2 class="section-title">Common Questions <span
+            style="font-size: 12px; background: var(--primary); color: white; padding: 2px 8px; border-radius: 10px; vertical-align: middle;">v10.1
+            LIVE</span></h2>
         <p class="section-subtitle">Find answers to the most common questions about our proactive safety shield.</p>
       </div>
 
-      <div class="faq-accordion-advanced reveal" style="max-width: 800px; margin: 0 auto; display: flex; flex-direction: column; gap: var(--space-4);">
-        
+      <div class="faq-accordion-advanced reveal"
+        style="max-width: 800px; margin: 0 auto; display: flex; flex-direction: column; gap: var(--space-4);">
+
         <details class="faq-details glass-card" style="overflow: hidden;">
           <summary class="faq-summary">
             <h3>Is my data really anonymous?</h3>
             <span class="faq-chevron">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                stroke-linejoin="round">
+                <path d="M6 9l6 6 6-6" />
+              </svg>
             </span>
           </summary>
           <div class="faq-content">
-            <p>Yes. All personal information like phone numbers and facial data is one-way hashed and encrypted using AES-256 before analysis. We do not store raw files. Your identity is shielded even from our own servers.</p>
+            <p>Yes. All personal information like phone numbers and facial data is one-way hashed and encrypted using
+              AES-256 before analysis. We do not store raw files. Your identity is shielded even from our own servers.
+            </p>
           </div>
         </details>
 
@@ -381,11 +402,16 @@
           <summary class="faq-summary">
             <h3>How does the NLP scanning work?</h3>
             <span class="faq-chevron">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                stroke-linejoin="round">
+                <path d="M6 9l6 6 6-6" />
+              </svg>
             </span>
           </summary>
           <div class="faq-content">
-            <p>The threat scorer doesn't just look at keywords; it evaluates context. It distinguishes between a friendly mention and malicious doxxing, accurately mapping threats to laws like the IT Act and IPC. It understands sarcasm, slang, and indirect threats.</p>
+            <p>The threat scorer doesn't just look at keywords; it evaluates context. It distinguishes between a
+              friendly mention and malicious doxxing, accurately mapping threats to laws like the IT Act and IPC. It
+              understands sarcasm, slang, and indirect threats.</p>
           </div>
         </details>
 
@@ -393,18 +419,23 @@
           <summary class="faq-summary">
             <h3>Does this replace police reports?</h3>
             <span class="faq-chevron">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                stroke-linejoin="round">
+                <path d="M6 9l6 6 6-6" />
+              </svg>
             </span>
           </summary>
           <div class="faq-content">
-            <p>No. Rakshana acts as your early warning system and evidence collector. The 'Report' feature helps you securely and anonymously submit this evidence directly to the National Cyber Crime portal. We help you build a stronger case by collecting evidence before it is deleted.</p>
+            <p>No. Rakshana acts as your early warning system and evidence collector. The 'Report' feature helps you
+              securely and anonymously submit this evidence directly to the National Cyber Crime portal. We help you
+              build a stronger case by collecting evidence before it is deleted.</p>
           </div>
         </details>
 
       </div>
     </div>
   </section>
-<!-- ========== CTA SECTION ========== -->
+  <!-- ========== CTA SECTION ========== -->
   <section class="cta-section" id="cta">
     <div class="container">
       <div class="cta-content">
@@ -419,8 +450,9 @@
   <footer class="footer" id="footer">
     <div class="container">
       <div class="footer-content">
-        <p class="footer-brand" data-i18n="footer.brand" data-i18n-html="true"><strong>Rakshana 24/7</strong> — <span class="telugu">రక్షణ 24/7</span> — Proactive Digital Safety for Women</p>
-        
+        <p class="footer-brand" data-i18n="footer.brand" data-i18n-html="true"><strong>Rakshana 24/7</strong> — <span
+            class="telugu">రక్షణ 24/7</span> — Proactive Digital Safety for Women</p>
+
         <div class="footer-links">
           <a href="legal.html" data-i18n="footer.legalRights">Legal Rights</a>
           <span>·</span>
@@ -433,18 +465,68 @@
         <!-- Language Picker -->
         <div class="lang-picker-wrapper" id="langPickerWrapper">
           <button class="lang-picker-btn" onclick="toggleLangPicker(event)" aria-label="Change language">
-            <span class="lang-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg></span>
+            <span class="lang-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"
+                stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10" />
+                <line x1="2" y1="12" x2="22" y2="12" />
+                <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
+              </svg></span>
             <span id="langPickerCurrent">🇬🇧 English</span>
-            <span class="lang-chevron"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span>
+            <span class="lang-chevron"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round"
+                stroke-linejoin="round">
+                <polyline points="6 9 12 15 18 9" />
+              </svg></span>
           </button>
           <div class="lang-dropdown" id="langDropdown">
             <div class="lang-dropdown-header" data-i18n="footer.language">Language</div>
-            <button class="lang-option active" data-lang="en" onclick="selectLanguage('en', event)"><span class="lang-option-flag">🇬🇧</span><div class="lang-option-info"><span class="lang-option-native">English</span><span class="lang-option-english">English</span></div><span class="lang-option-check"><svg viewBox="0 0 24 24" fill="none"><polyline points="20 6 9 17 4 12"/></svg></span></button>
-            <button class="lang-option" data-lang="hi" onclick="selectLanguage('hi', event)"><span class="lang-option-flag">🇮🇳</span><div class="lang-option-info"><span class="lang-option-native">हिन्दी</span><span class="lang-option-english">Hindi</span></div><span class="lang-option-check"><svg viewBox="0 0 24 24" fill="none"><polyline points="20 6 9 17 4 12"/></svg></span></button>
-            <button class="lang-option" data-lang="te" onclick="selectLanguage('te', event)"><span class="lang-option-flag">🇮🇳</span><div class="lang-option-info"><span class="lang-option-native">తెలుగు</span><span class="lang-option-english">Telugu</span></div><span class="lang-option-check"><svg viewBox="0 0 24 24" fill="none"><polyline points="20 6 9 17 4 12"/></svg></span></button>
-            <button class="lang-option" data-lang="kn" onclick="selectLanguage('kn', event)"><span class="lang-option-flag">🇮🇳</span><div class="lang-option-info"><span class="lang-option-native">ಕನ್ನಡ</span><span class="lang-option-english">Kannada</span></div><span class="lang-option-check"><svg viewBox="0 0 24 24" fill="none"><polyline points="20 6 9 17 4 12"/></svg></span></button>
-            <button class="lang-option" data-lang="ml" onclick="selectLanguage('ml', event)"><span class="lang-option-flag">🇮🇳</span><div class="lang-option-info"><span class="lang-option-native">മലയാളം</span><span class="lang-option-english">Malayalam</span></div><span class="lang-option-check"><svg viewBox="0 0 24 24" fill="none"><polyline points="20 6 9 17 4 12"/></svg></span></button>
-            <button class="lang-option" data-lang="ta" onclick="selectLanguage('ta', event)"><span class="lang-option-flag">🇮🇳</span><div class="lang-option-info"><span class="lang-option-native">தமிழ்</span><span class="lang-option-english">Tamil</span></div><span class="lang-option-check"><svg viewBox="0 0 24 24" fill="none"><polyline points="20 6 9 17 4 12"/></svg></span></button>
+            <button class="lang-option active" data-lang="en" onclick="selectLanguage('en', event)"><span
+                class="lang-option-flag">🇬🇧</span>
+              <div class="lang-option-info"><span class="lang-option-native">English</span><span
+                  class="lang-option-english">English</span></div><span class="lang-option-check"><svg
+                  viewBox="0 0 24 24" fill="none">
+                  <polyline points="20 6 9 17 4 12" />
+                </svg></span>
+            </button>
+            <button class="lang-option" data-lang="hi" onclick="selectLanguage('hi', event)"><span
+                class="lang-option-flag">🇮🇳</span>
+              <div class="lang-option-info"><span class="lang-option-native">हिन्दी</span><span
+                  class="lang-option-english">Hindi</span></div><span class="lang-option-check"><svg viewBox="0 0 24 24"
+                  fill="none">
+                  <polyline points="20 6 9 17 4 12" />
+                </svg></span>
+            </button>
+            <button class="lang-option" data-lang="te" onclick="selectLanguage('te', event)"><span
+                class="lang-option-flag">🇮🇳</span>
+              <div class="lang-option-info"><span class="lang-option-native">తెలుగు</span><span
+                  class="lang-option-english">Telugu</span></div><span class="lang-option-check"><svg
+                  viewBox="0 0 24 24" fill="none">
+                  <polyline points="20 6 9 17 4 12" />
+                </svg></span>
+            </button>
+            <button class="lang-option" data-lang="kn" onclick="selectLanguage('kn', event)"><span
+                class="lang-option-flag">🇮🇳</span>
+              <div class="lang-option-info"><span class="lang-option-native">ಕನ್ನಡ</span><span
+                  class="lang-option-english">Kannada</span></div><span class="lang-option-check"><svg
+                  viewBox="0 0 24 24" fill="none">
+                  <polyline points="20 6 9 17 4 12" />
+                </svg></span>
+            </button>
+            <button class="lang-option" data-lang="ml" onclick="selectLanguage('ml', event)"><span
+                class="lang-option-flag">🇮🇳</span>
+              <div class="lang-option-info"><span class="lang-option-native">മലയാളം</span><span
+                  class="lang-option-english">Malayalam</span></div><span class="lang-option-check"><svg
+                  viewBox="0 0 24 24" fill="none">
+                  <polyline points="20 6 9 17 4 12" />
+                </svg></span>
+            </button>
+            <button class="lang-option" data-lang="ta" onclick="selectLanguage('ta', event)"><span
+                class="lang-option-flag">🇮🇳</span>
+              <div class="lang-option-info"><span class="lang-option-native">தமிழ்</span><span
+                  class="lang-option-english">Tamil</span></div><span class="lang-option-check"><svg viewBox="0 0 24 24"
+                  fill="none">
+                  <polyline points="20 6 9 17 4 12" />
+                </svg></span>
+            </button>
           </div>
         </div>
 
@@ -462,7 +544,8 @@
   <!-- Floating SOS SOS Toggle -->
   <div class="sos-toggle-btn" id="sosToggleBtn" onclick="window.location.href='sos.html'" style="cursor:pointer;">
     <div class="sos-tooltip">Emergency SOS</div>
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+      stroke-linejoin="round">
       <path d="M12 2L20 7V12C20 18 15 21 12 22C9 21 4 18 4 12V7L12 2Z" />
     </svg>
   </div>
@@ -474,9 +557,9 @@
   <script src="voice-assistant.js?v=1"></script>
 
   <script>
-    function toggleLangPicker(e){if(e)e.stopPropagation();var w=document.getElementById('langPickerWrapper');if(w)w.classList.toggle('open');}
-    function selectLanguage(lang,e){if(e)e.stopPropagation();if(typeof RakshanaI18n!=='undefined'){RakshanaI18n.setLanguage(lang);}var w=document.getElementById('langPickerWrapper');if(w)w.classList.remove('open');}
-    document.addEventListener('click',function(e){var w=document.getElementById('langPickerWrapper');if(w&&w.classList.contains('open')&&!w.contains(e.target))w.classList.remove('open');});
+    function toggleLangPicker(e) { if (e) e.stopPropagation(); var w = document.getElementById('langPickerWrapper'); if (w) w.classList.toggle('open'); }
+    function selectLanguage(lang, e) { if (e) e.stopPropagation(); if (typeof RakshanaI18n !== 'undefined') { RakshanaI18n.setLanguage(lang); } var w = document.getElementById('langPickerWrapper'); if (w) w.classList.remove('open'); }
+    document.addEventListener('click', function (e) { var w = document.getElementById('langPickerWrapper'); if (w && w.classList.contains('open') && !w.contains(e.target)) w.classList.remove('open'); });
   </script>
 </body>
 

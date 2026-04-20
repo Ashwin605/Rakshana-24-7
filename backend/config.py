@@ -14,36 +14,53 @@ class BaseConfig:
     """Base configuration shared across all environments."""
 
     # Flask
-    SECRET_KEY = os.getenv("SECRET_KEY", "rakshana-dev-secret-change-in-production")
+    SECRET_KEY = os.getenv("SECRET_KEY")
+    if not SECRET_KEY:
+        raise ValueError("SECRET_KEY environment variable is required")
 
     # Database
-    SQLALCHEMY_DATABASE_URI = os.getenv("DATABASE_URL", "sqlite:///rakshana.db")
+    SQLALCHEMY_DATABASE_URI = os.getenv("DATABASE_URL")
+    if not SQLALCHEMY_DATABASE_URI:
+        raise ValueError("DATABASE_URL environment variable is required")
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     SQLALCHEMY_ECHO = False
 
+    # Database connection pooling
+    SQLALCHEMY_ENGINE_OPTIONS = {
+        "pool_size": 10,
+        "pool_recycle": 3600,
+        "pool_pre_ping": True,
+    }
+
     # JWT
-    JWT_SECRET_KEY = os.getenv("JWT_SECRET_KEY", "rakshana-jwt-secret")
+    JWT_SECRET_KEY = os.getenv("JWT_SECRET_KEY")
+    if not JWT_SECRET_KEY:
+        raise ValueError("JWT_SECRET_KEY environment variable is required")
     JWT_ACCESS_TOKEN_EXPIRES = timedelta(
         seconds=int(os.getenv("JWT_ACCESS_TOKEN_EXPIRES", 3600))
     )
     JWT_REFRESH_TOKEN_EXPIRES = timedelta(
         seconds=int(os.getenv("JWT_REFRESH_TOKEN_EXPIRES", 2592000))
     )
-    JWT_TOKEN_LOCATION = ["headers"]
+    JWT_TOKEN_LOCATION = ["cookies"]
+    JWT_COOKIE_SECURE = True
+    JWT_COOKIE_HTTPONLY = True
+    JWT_COOKIE_SAMESITE = "Strict"
     JWT_HEADER_NAME = "Authorization"
     JWT_HEADER_TYPE = "Bearer"
+    JWT_ALGORITHM = "HS256"
 
     # Encryption (AES-256)
-    ENCRYPTION_KEY = os.getenv(
-        "ENCRYPTION_KEY", "rakshana-aes-256-key-must-be-32-bytes!!"
-    )
+    ENCRYPTION_KEY = os.getenv("ENCRYPTION_KEY")
+    if not ENCRYPTION_KEY or len(ENCRYPTION_KEY) != 32:
+        raise ValueError("ENCRYPTION_KEY must be 32 bytes (set via environment variable)")
 
     # Redis / Celery
-    REDIS_URL = os.getenv("REDIS_URL", "redis://localhost:6379/0")
-    CELERY_BROKER_URL = os.getenv("CELERY_BROKER_URL", "redis://localhost:6379/0")
-    CELERY_RESULT_BACKEND = os.getenv(
-        "CELERY_RESULT_BACKEND", "redis://localhost:6379/1"
-    )
+    REDIS_URL = os.getenv("REDIS_URL")
+    if not REDIS_URL:
+        raise ValueError("REDIS_URL environment variable is required")
+    CELERY_BROKER_URL = REDIS_URL
+    CELERY_RESULT_BACKEND = os.getenv("CELERY_RESULT_BACKEND", REDIS_URL)
 
     # Telegram
     TELEGRAM_API_ID = os.getenv("TELEGRAM_API_ID", "")
@@ -69,11 +86,16 @@ class BaseConfig:
     THREAT_ALERT_THRESHOLD = int(os.getenv("THREAT_ALERT_THRESHOLD", 70))
     THREAT_CRITICAL_THRESHOLD = int(os.getenv("THREAT_CRITICAL_THRESHOLD", 90))
 
-    # CORS
+    # CORS - restrict to specific origins
     CORS_ORIGINS = [
         o.strip()
         for o in os.getenv("CORS_ORIGINS", "http://localhost:3000").split(",")
+        if o.strip()
     ]
+
+    # Security
+    MAX_CONTENT_LENGTH = 50 * 1024 * 1024  # 50MB max upload
+    RATELIMIT_STORAGE_URL = REDIS_URL
 
 
 class DevelopmentConfig(BaseConfig):

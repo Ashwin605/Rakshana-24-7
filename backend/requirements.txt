@@ -44,3 +44,4 @@ marshmallow==3.23.2
 
 # --- Password Hashing ---
 bcrypt==4.2.1
+flask-limiter

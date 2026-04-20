@@ -4,6 +4,7 @@
 # JWT with short expiry + refresh token rotation, optional OTP
 
 import bcrypt
+import logging
 from flask import Blueprint, request, jsonify
 from flask_jwt_extended import (
     create_access_token,
@@ -13,14 +14,16 @@ from flask_jwt_extended import (
     get_jwt,
 )
 
-from app import db
+from app import db, limiter
 from app.models.user import User
 from app.utils.encryption import hash_phone
 
+logger = logging.getLogger(__name__)
 auth_bp = Blueprint("auth", __name__)
 
 
 @auth_bp.route("/register", methods=["POST"])
+@limiter.limit("5 per hour")  # 5 registrations per hour per IP
 def register():
     """
     Register a new user.
@@ -31,72 +34,88 @@ def register():
     3. All PII encrypted with AES-256
     4. Celery periodic task registered for this user
     """
-    data = request.get_json()
+    try:
+        data = request.get_json()
 
-    if not data:
-        return jsonify({"error": "Request body required"}), 400
+        if not data:
+            return jsonify({"error": "Request body required"}), 400
 
-    email = data.get("email", "").strip().lower()
-    password = data.get("password", "")
-    phone = data.get("phone_number", "")
-    social_handles = data.get("social_handles", "")
-    display_name = data.get("display_name", "")
-    language = data.get("language", "en")
+        email = data.get("email", "").strip().lower()
+        password = data.get("password", "")
+        phone = data.get("phone_number", "")
+        social_handles = data.get("social_handles", "")
+        display_name = data.get("display_name", "")
+        language = data.get("language", "en")
 
-    # Validation
-    if not email or not password:
-        return jsonify({"error": "Email and password are required"}), 400
+        # Validation
+        if not email or not password:
+            return jsonify({"error": "Email and password are required"}), 400
 
-    if len(password) < 8:
-        return jsonify({"error": "Password must be at least 8 characters"}), 400
+        if len(password) < 8:
+            return jsonify({"error": "Password must be at least 8 characters"}), 400
 
-    # Check existing user
-    existing = User.query.filter_by(email=email).first()
-    if existing:
-        return jsonify({"error": "Email already registered"}), 409
+        if len(email) > 255:
+            return jsonify({"error": "Email too long"}), 400
 
-    # Create user with encrypted PII
-    password_hash = bcrypt.hashpw(password.encode("utf-8"), bcrypt.gensalt()).decode("utf-8")
+        if display_name and len(display_name) > 100:
+            return jsonify({"error": "Display name too long"}), 400
 
-    user = User(
-        email=email,
-        password_hash=password_hash,
-        display_name=display_name,
-        language=language,
-    )
+        # Check existing user
+        existing = User.query.filter_by(email=email).first()
+        if existing:
+            logger.warning(f"Registration attempt for existing email: {email}")
+            return jsonify({"error": "Email already registered"}), 409
 
-    # Set encrypted fields via properties
-    if phone:
-        user.phone_number = phone  # Encrypts + hashes automatically
-    if social_handles:
-        user.social_handles = social_handles  # AES-256 encrypted
+        # Create user with encrypted PII
+        password_hash = bcrypt.hashpw(password.encode("utf-8"), bcrypt.gensalt()).decode("utf-8")
 
-    db.session.add(user)
-    db.session.commit()
+        user = User(
+            email=email,
+            password_hash=password_hash,
+            display_name=display_name,
+            language=language,
+        )
 
-    # Generate tokens
-    access_token = create_access_token(identity=user.id)
-    refresh_token = create_refresh_token(identity=user.id)
+        # Set encrypted fields via properties
+        if phone:
+            user.phone_number = phone  # Encrypts + hashes automatically
+        if social_handles:
+            user.social_handles = social_handles  # AES-256 encrypted
 
-    # TODO: Register Celery periodic scan task for this user
-    # from app.workers.tasks import register_user_scan
-    # register_user_scan.delay(user.id)
+        db.session.add(user)
+        db.session.commit()
 
-    return jsonify({
-        "message": "Registration successful. Your digital shield is active.",
-        "user": user.to_dict(),
-        "access_token": access_token,
-        "refresh_token": refresh_token,
-    }), 201
+        logger.info(f"New user registered: {user.id}")
+
+        # Generate tokens
+        access_token = create_access_token(identity=user.id)
+        refresh_token = create_refresh_token(identity=user.id)
+
+        # TODO: Register Celery periodic scan task for this user
+        # from app.workers.tasks import register_user_scan
+        # register_user_scan.delay(user.id)
+
+        return jsonify({
+            "message": "Registration successful. Your digital shield is active.",
+            "user": user.to_dict(),
+            "access_token": access_token,
+            "refresh_token": refresh_token,
+        }), 201
+
+    except Exception as e:
+        logger.error(f"Registration error: {e}", exc_info=True)
+        return jsonify({"error": "Registration failed. Please try again."}), 500
 
 
 @auth_bp.route("/login", methods=["POST"])
+@limiter.limit("10 per hour")  # 10 login attempts per hour per IP
 def login():
     """Authenticate user and return JWT tokens."""
-    data = request.get_json()
+    try:
+        data = request.get_json()
 
-    if not data:
-        return jsonify({"error": "Request body required"}), 400
+        if not data:
+            return jsonify({"error": "Request body required"}), 400
 
     email = data.get("email", "").strip().lower()
     password = data.get("password", "")
